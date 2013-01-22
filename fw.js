@@ -1,0 +1,644 @@
+//the calling function
+var fw = function(val){
+	var elem;
+	if(typeof(val) === "string"){
+		if(val.indexOf('<') === 0){
+			elem = document.createElement(val.replace(/^</,'').replace(/>$/,''));
+			return elem;
+		}
+		else if(val.indexOf('[') === 0){
+			elem = document.querySelectorAll(val.replace(/^\[/,'').replace(/\]$/,''));
+			elem.forceArray = true;
+		}
+		else
+			elem = document.querySelectorAll(val);
+	}
+	else if(typeof(val) === "object"){
+		return new FW(val);
+	}
+
+	if(elem.length === 1 && !elem.forceArray){
+		return elem[0];
+	}
+	else if(elem.length > 1 || elem.forceArray){
+		if(elem.forceArray) elem.forceArray = undefined;
+		var arr = [];
+		for(var i=0;i<elem.length;i++){
+			arr.push(elem[i]);
+		}
+		if(!arr.forEach){
+			arr.forEach = function(callback){
+				for(var i=0;i<this.length;i++){
+					callback(this[i],i,this);
+				}
+			};
+		}
+		return arr;
+	}
+	else{
+		return undefined;
+	}
+
+};
+
+fw.loadScript = function(url) {
+	var d = document,
+		t = "script",
+		g = d.createElement(t),
+		s = d.getElementsByTagName(t)[0];
+	g.src = url;
+	s.parentNode.insertBefore(g, s);
+};
+
+fw.extend = function(obj,obj2) {
+	//do I want a deep copy?
+	//now this is a shallow copy.
+	for(var prop in obj2){
+		obj[prop] = obj2[prop];
+	}
+	return obj;
+};
+
+//based on pubsubz
+
+/*!
+* Pub/Sub implementation
+* http://addyosmani.com/
+* Licensed under the GPL
+* http://jsfiddle.net/LxPrq/
+*/
+
+
+fw.topics = {};
+fw.subUid = -1;
+
+fw.publish = function ( topic, args ) {
+
+	if (!fw.topics[topic]) {
+		return false;
+	}
+
+	setTimeout(function () {
+		var subscribers = fw.topics[topic],
+			len = subscribers ? subscribers.length : 0;
+
+		while (len--) {
+			subscribers[len].func(args, topic);
+		}
+	}, 0);
+
+	return true;
+
+};
+
+fw.subscribe = function ( topic, func ) {
+	if (!fw.topics[topic]) {
+		fw.topics[topic] = [];
+	}
+	var token = (++fw.subUid).toString();
+	fw.topics[topic].push({
+		token: token,
+		func: func
+	});
+	return token;
+};
+fw.unsubscribe = function ( token ) {
+	for (var m in fw.topics) {
+		if (fw.topics[m]) {
+			for (var i = 0, j = fw.topics[m].length; i < j; i++) {
+				if (fw.topics[m][i].token === token) {
+					fw.topics[m].splice(i, 1);
+					return token;
+				}
+			}
+		}
+	}
+	return false;
+};
+
+fw.stop = function(e){
+	e = e || window.event;
+	if(e.stopPropagation)
+		e.stopPropagation();
+	else
+		e.cancelBubble = true;
+};
+
+fw.cancel = function(e){
+	e = e || window.event;
+	if(e.preventDefault)
+		e.preventDefault();
+	else
+		e.returnValue = false;
+};
+
+fw.stopCancel = function(e){
+	this.stop(e);
+	this.cancel(e);
+};
+
+fw.target = function(e){
+	e = e || window.event;
+	elem = e.target || e.srcElement;
+	return elem;
+};
+
+fw.currentTarget = function(e){
+	//TODO: have e.srcElement return the currentTarget instead of the target.
+	elem = e.currentTarget || e.srcElement;
+	return elem;
+};
+
+fw.key = function(e){
+    var code;
+	if (!e) var e = window.event;
+	if (e.keyCode) code = e.keyCode;
+	else if (e.which) code = e.which;
+	//This seems to be off.
+	var character = String.fromCharCode(code);
+	return {code: code, char: character};
+};
+
+fw.ajax = function(options){
+	var o = {
+		type: options.type || "GET",
+		url: options.url,
+		data: options.data || null,
+		success: options.success,
+		failure: options.failure,
+		complete: options.complete
+	};
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = onStatusChange;
+	// how do I apply qs params?
+	request.open(o.type, o.url, true);
+	request.send(o.data);
+	function onStatusChange(){
+		if(request.readyState === 4){
+			var obj = {
+				val: trimToBody(request.responseText),
+				raw: request.responseText,
+				status: request.status,
+				statusText: request.statusText
+			};
+
+			if(o.success && obj.status === 200)
+				o.success(obj);
+			else if(o.failure && obj.status !== 200)
+				o.failure(obj);
+
+			if(o.complete)
+				o.complete(obj);
+		}
+	}
+	function trimToBody(val){
+		try{
+			val = val.match(/<body.*?>[\w\W]+<\/body>/)[0].replace(/<body.*?>/,'').replace(/<\/body>/,'');
+		}catch(err){}
+		return val;
+	}
+};
+fw.jsonp = function(options){
+	var o = {
+		url: options.url,
+		success: options.success
+	};
+	var key = this.randomString(10);
+	window[key] = function(json){
+		o.success(json);
+		this[key] = undefined;
+	};
+
+	fw.loadScript(o.url + '?callback=' + key);
+};
+
+fw.stringToXml = function(str){
+	var xml;
+		str = str.replace(/[\t\n]/gi,"");
+	if (typeof window.DOMParser !== "undefined") {
+		xml = (new window.DOMParser()).parseFromString(str, "text/xml");
+	}
+	else if (typeof window.ActiveXObject !== "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+		var iexml = new window.ActiveXObject("Microsoft.XMLDOM");
+		iexml.async = "false";
+		iexml.loadXML(str);
+		xml = iexml;
+	}
+	else
+		xml = undefined;
+
+	return xml;
+};
+
+// Changes XML to JSON
+fw.xmlToJson = function(rxml) {
+	var obj = {},
+		xml = rxml;
+	if(typeof(rxml) === "string"){
+		xml = this.stringToXml(rxml);
+		if(!xml)
+			return obj;
+	}
+
+	if (xml.nodeType === 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+			obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	}
+	else if (xml.nodeType === 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+
+			if (typeof(obj[nodeName]) === "undefined") {
+				obj[nodeName] = this.xmlToJson(item);
+			}
+			if (typeof(obj[nodeName].push) === "undefined") {
+				var old = obj[nodeName];
+				obj[nodeName] = [];
+				obj[nodeName].push(old);
+			}
+			else
+				obj[nodeName].push(this.xmlToJson(item));
+		}
+	}
+	return obj;
+};
+
+fw.randomString = function(length, isAlphaNumeric){
+	var s= '';
+	var randomchar=function(){
+		var rn= Math.random();
+		var gn = Math.floor(rn*122);
+		if(gn > 0 && gn < 10 && isAlphaNumeric){return gn;}
+		else if(gn < 91){return String.fromCharCode(gn > 64 ? gn : 65 + Math.floor(rn*26));}
+		else if(gn > 90){return String.fromCharCode(gn > 96 && gn < 123 ? gn : 97 + Math.floor(rn*26));}
+	};
+	while(s.length< length) s+= randomchar();
+	return s;
+};
+
+fw.qs = function(attr){
+	var qs = window.location.search.substring(1),
+		rule = qs.split("&"),
+		obj = {
+			val : "",
+			arr : []
+		};
+	for (var i=0;i<rule.length;i++) {
+		var attrVal = rule[i].split("=");
+		if (attrVal[0] === attr) {
+			obj.val = attrVal[1];
+			obj.arr.push(attrVal[1]);
+		}
+	}
+	obj.val = decodeURIComponent(obj.val).replace('<','').replace('>','');
+	return obj;
+};
+
+fw.proxy = function(func, obj) {
+	if(func.bind){
+		return func.bind(obj);
+	}
+	return function() {
+		return func.apply(obj, arguments);
+	};
+};
+
+
+fw.styleProp = function(prop){
+	var browsers = ["chrome","safari","firefox","opera","ie",""],
+	support = {},
+	p = prop.charAt(0).toUpperCase() + prop.slice(1);
+
+	for(var i=0;i<browsers.length; i++){
+		support = this.checkCssPropSupport(p,browsers[i]);
+		if(support.is)
+			break;
+	}
+	return support;
+
+};
+
+fw.checkCssPropSupport = function(prop, browser){
+	var p,
+		support = {is:true, prop:prop};
+		el = document.createElement('div');
+	switch(browser){
+		case "chrome":
+			p = "webkit";
+			break;
+		case "safari":
+			p = "webkit";
+			break;
+		case "firefox":
+			p = "Moz";
+			break;
+		case "opera":
+			p = "O";
+			break;
+		case "ie":
+			p="ms";
+			break;
+		default:
+			p='';
+			prop=prop.toLowerCase();
+			break;
+	}
+	support.is = typeof(el.style[p + prop]) !== "undefined";
+	support.prop = p + prop;
+	el = null;
+	return support;
+};
+
+fw.cookie = {
+	set :   function(name, val, days){
+				var expires = "";
+				if (days) {
+					var date = new Date();
+					date.setTime(date.getTime()+(days*24*60*60*1000));
+					expires = "; expires="+date.toGMTString();
+				}
+
+				document.cookie = name+"="+val+expires+"; path=/";
+	},
+	get :   function(name){
+				var nameEQ = name + "=", val = '';
+				var ca = document.cookie.split(';');
+				for(var i=0;i < ca.length;i++) {
+					var c = ca[i];
+					while (c.charAt(0)===' ') c = c.substring(1,c.length);
+					if (c.indexOf(nameEQ) === 0) val = c.substring(nameEQ.length,c.length);
+				}
+			return encodeURIComponent(val);
+			},
+
+	remove : function(name){
+			this.set(name, "", -1);
+	}
+};
+//IE8 rotation
+fw.dtoIE = function(deg) {
+	var d = deg * (Math.PI / 180);
+	var cos = Math.cos(d);
+	var sin = Math.sin(d);
+	return 'M11=' + cos + ', M12=' + -sin + ', M21=' + sin + ', M22=' + cos;
+	//add the prop to actually rotate IE istead of just returning the number for it.
+};
+
+
+var FW = function(fwObj){
+	fwObj.createChild = function(val){
+		elem = document.createElement(val.replace(/^</,'').replace(/>$/,''));
+		this.appendChild(elem);
+		return elem;
+	};
+	fwObj.find = function(val){
+		var elem;
+		if(val.indexOf('[') === 0){
+			elem = this.querySelectorAll(val.replace(/^\[/,'').replace(/\]$/,''));
+			elem.forceArray = true;
+		}
+		else
+			elem = this.querySelectorAll(val);
+
+		if(elem.length === 1 && !elem.forceArray){
+			return elem[0];
+		}
+		else if(elem.length > 1 || elem.forceArray){
+
+			if(elem.forceArray) elem.forceArray = undefined;
+			var arr = [];
+			for(var i=0;i<elem.length;i++){
+				arr.push(elem[i]);
+			}
+			return arr;
+		}
+	};
+
+	fwObj.addClass = function(c){
+		if(this.classList){
+			this.classList.add(c);
+		}
+		else {
+			//not a modern browser
+			var cls = this.getAttribute('class'),
+				hasClass = false;
+			if(cls){
+				var clsa = cls.split(' ');
+				for(var i=0;i<clsa.length;i++){
+					if(clsa[i] === c)
+						hasClass = true;
+				}
+				if(!hasClass){
+					this.setAttribute('class',cls + " " + c);
+				}
+			}
+			else{
+				this.setAttribute('class',c);
+			}
+
+		}
+		return this;
+	};
+
+	fwObj.removeClass = function(c){
+
+		if(this.classList){
+			this.classList.remove(c);
+		}
+		else {
+			var cls = this.getAttribute('class'),
+				hasClass = false,
+				cl = "";
+			if(cls){
+				var clsa = cls.split(' ');
+				for(var i=0;i<clsa.length;i++){
+					var s = i===0 ? "":" ";
+					if(clsa[i] !== c)
+						cl += s + clsa[i];
+				}
+				this.setAttribute('class',cl);
+			}
+		}
+		return this;
+	};
+
+	fwObj.toggleClass = function(c){
+		if(this.classList){
+			this.classList.toggle(c);
+		}
+		else {
+			if(this.containsClass(c)){
+				this.removeClass(c);
+			}
+			else {
+				this.addClass(c);
+			}
+		}
+		return this;
+	};
+
+	fwObj.containsClass = function(c){
+		if(this.classList){
+			return this.classList.contains(c);
+		}
+		else {
+			var cls = this.getAttribute('class');
+			if(cls){
+				var clsa = cls.split(' ');
+				for(var i=0;i<clsa.length;i++){
+					if(clsa[i] === c)
+						return true;
+				}
+			}
+			return false;
+		}
+	};
+
+	fwObj.addListener = window.addListener = function(eventName,handler,propagation,obj){
+		var p = typeof(propagation)!=="undefined" ? propagation : false;
+		//this may be better attached to the element.
+		if(!handler.p)
+			handler.p = [];
+		var yep = {element:this,proxy:fw.proxy(handler,obj),type:eventName};
+		if(typeof(obj) !== "undefined"){
+			handler.p.push(yep);
+			if(!this.addEventListener){
+				this.attachEvent("on" + eventName, yep.proxy);
+			}
+			else{
+				this.addEventListener(eventName,yep.proxy,p);
+			}
+		}
+		else{
+			if(!this.addEventListener){
+				handler.p.push(yep);
+				this.attachEvent("on" + eventName,yep.proxy);
+			}
+			else{this.addEventListener(eventName,handler,p);}
+		}
+		return this;
+	};
+
+	fwObj.removeListener = window.removeListener = function(eventName,handler,propagation){
+		var p = typeof(propagation)!=="undefined" ? propagation : false;
+		var h = handler;
+
+		if(handler.p){
+			for(var i=0;i<handler.p.length;i++){
+				if(this === handler.p[i].element && eventName === handler.p[i].type){
+					h = handler.p[i].proxy;
+					handler.p.splice(i,1);
+				}
+			}
+		}
+
+		if(!this.removeEventListener){this.detachEvent("on" + eventName,h);}
+		else{this.removeEventListener(eventName,h,p);}
+
+		return this;
+	};
+
+	fwObj.addLoading = function(seg, opt, style){
+		this.removeLoading();
+		if(this.style.position === "relative" || this.style.position === "absolute"){}
+		else
+			this.style.position = 'relative';
+
+		var loading = fw('<div>').addClass('loading');
+		if(typeof(style) === "string")loading.addClass(style);
+
+		var div = fw("<div>");
+
+		loading.appendChild(div);
+		loading.style.opacity = 0;
+		this.appendChild(loading);
+
+		var	transformSupport = fw.styleProp("transform"),
+			animationSupport = fw.styleProp("animation"),
+			transition = fw.styleProp("transition");
+
+		if(transition.is)
+			loading.style[transition.prop] = "opacity 100ms ease-out";
+
+		if(!transformSupport.is || !animationSupport.is){
+			div.addClass('fallback');
+		}
+		else{
+
+			var segments = seg ? seg : 8,
+				degrees = Math.round(360 / segments);
+
+			for(var i=1; i<segments+1; i++){
+
+				var d = fw("<div>").addClass('segment');
+				var span = fw("<span>");
+
+				d.appendChild(span);
+
+				var deg = degrees*i + "deg";
+				d.style[transformSupport.prop] = "rotate(" + deg + ")";
+				var num=Math.random()*3;
+				d.style[animationSupport.prop] = "loader " + num + "s linear infinite";
+				var w=8+"px",h=30+"px",hi=30,wi=8;
+				var opac = 2 / i;
+
+				if(opt === "tornado"){
+					wi = num * i * i;
+				}
+				else if(opt === "traditional"){
+					d.style[animationSupport.prop] = "none";
+					span.style.borderRadius = "2px";
+					wi = 2 * Math.PI * 8;
+					opac = 10 / (i+1);
+				}
+				else if(opt > 0){
+					wi = opt;
+				}
+
+				hi = wi * Math.PI / seg;
+				h=hi+"px";
+				w = wi + "px";
+				d.style.width = w;
+				d.style.height = h;
+				d.style.marginLeft = -(wi/2) + "px";
+				d.style.marginTop = -(hi/2) + "px";
+
+				d.style.opacity = opac;
+				div.appendChild(d);
+			}
+		}
+		setTimeout(function(){
+			loading.style.opacity = 1;
+		},1);
+	};
+
+
+	fwObj.opacity = function(num){
+		if(this.style && typeof(this.style.opacity) === "undefined")
+			this.style.filter = "alpha(opacity:" + num * 100 + ")";
+		else
+			this.style.opacity = num;
+	};
+
+	fwObj.removeLoading = function(){
+		var l = this.find(".loading");
+		if(l){
+			l.style.opacity = 0;
+			setTimeout(function(){l.parentNode.removeChild(l);},100);
+		}
+	};
+	return fwObj;
+};
+FW(Element.prototype);
