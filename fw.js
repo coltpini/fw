@@ -137,21 +137,9 @@ fw.stopCancel = function(e){
 	this.cancel(e);
 };
 
-fw.target = function(e){
-	e = e || window.event;
-	elem = e.target || e.srcElement;
-	return elem;
-};
-
-fw.currentTarget = function(e){
-	//TODO: have e.srcElement return the currentTarget instead of the target.
-	elem = e.currentTarget || e.srcElement;
-	return elem;
-};
-
 fw.key = function(e){
     var code;
-	if (!e) var e = window.event;
+	e = e || window.event;
 	if (e.keyCode) code = e.keyCode;
 	else if (e.which) code = e.which;
 	//This seems to be off.
@@ -306,11 +294,15 @@ fw.qs = function(attr){
 	return obj;
 };
 
-fw.proxy = function(func, obj) {
+fw.proxy = function(func, obj, _this) {
 	if(func.bind){
 		return func.bind(obj);
 	}
 	return function() {
+		if(_this && arguments[0].srcElement && typeof(arguments[0].currentTarget) === "undefined"){
+			arguments[0].currentTarget = _this;
+			arguments[0].target = arguments[0].srcElement;
+		}
 		return func.apply(obj, arguments);
 	};
 };
@@ -511,18 +503,23 @@ var FW = function(fwObj){
 		//this may be better attached to the element.
 		if(!handler.p)
 			handler.p = [];
-		var yep = {element:this,proxy:fw.proxy(handler,obj),type:eventName};
+			var yep = {element:this,proxy:fw.proxy(handler,obj),type:eventName};
 		if(typeof(obj) !== "undefined"){
-			handler.p.push(yep);
+
 			if(!this.addEventListener){
+				yep = {element:this,proxy:fw.proxy(handler,obj,this),type:eventName};
 				this.attachEvent("on" + eventName, yep.proxy);
 			}
 			else{
 				this.addEventListener(eventName,yep.proxy,p);
 			}
+			handler.p.push(yep);
 		}
 		else{
+			// no obj, and you are IE.
 			if(!this.addEventListener){
+				// this will make this this and not window
+				yep = {element:this,proxy:fw.proxy(handler,this,this),type:eventName};
 				handler.p.push(yep);
 				this.attachEvent("on" + eventName,yep.proxy);
 			}
