@@ -25,6 +25,22 @@ If an object is passed in it will attach all the functions to the object, this i
 *	An group of dom elements
 *	An object with new functions attached.
 
+fw.find
+-------
+###Accepts
+object to search and a selector string
+
+This function is used by fw() and by Element.prototype.find(). Seperated for use on non Element objects, such as XML, and to reduce duplication of code.
+
+This also normalizes a return from querySelectorAll into a real array, instead of the weird thing that is used because I like arrays.
+
+This will use the querySelectorAll function on the _this object, so the fw() function uses it against document, whereas Element.prototype.find uses it agains the instance of the Element.
+
+###Returns
+*	A single dom element
+*	An group of dom elements
+*	An object with new functions attached.
+
 fw.loadScript
 -------------
 ###Accepts

@@ -1,26 +1,32 @@
 //the calling function
 var fw = function(val){
 	var elem;
-	if(typeof(val) === "string"){
-		if(val.indexOf('<') === 0){
-			elem = document.createElement(val.replace(/^</,'').replace(/>$/,''));
-			return elem;
-		}
-		else if(val.indexOf('[') === 0){
-			elem = document.querySelectorAll(val.replace(/^\[/,'').replace(/\]$/,''));
-			elem.forceArray = true;
-		}
-		else
-			elem = document.querySelectorAll(val);
-	}
-	else if(typeof(val) === "object"){
+	if(typeof(val) === "object"){
 		return new FW(val);
 	}
+
+	if(val.indexOf('<') === 0){
+		elem = document.createElement(val.replace(/^</,'').replace(/>$/,''));
+		return elem;
+	}
+
+	return fw.find(document,val);
+};
+
+fw.find = function(_this,_val){
+	var elem;
+	if(_val.indexOf('[') === 0){
+		elem = _this.querySelectorAll(_val.replace(/^\[/,'').replace(/\]$/,''));
+		elem.forceArray = true;
+	}
+	else
+		elem = _this.querySelectorAll(_val);
 
 	if(elem.length === 1 && !elem.forceArray){
 		return elem[0];
 	}
-	else if(elem.length > 1 || elem.forceArray){
+	else {
+
 		if(elem.forceArray) elem.forceArray = undefined;
 		var arr = [];
 		for(var i=0;i<elem.length;i++){
@@ -35,33 +41,6 @@ var fw = function(val){
 		}
 		return arr;
 	}
-	else{
-		return undefined;
-	}
-
-};
-
-fw.find = function(_this,_val){
-	var elem;
-	 if(_val.indexOf('[') === 0){
-			elem = _this.querySelectorAll(_val.replace(/^\[/,'').replace(/\]$/,''));
-			elem.forceArray = true;
-		}
-		else
-			elem = _this.querySelectorAll(_val);
-
-		if(elem.length === 1 && !elem.forceArray){
-			return elem[0];
-		}
-		else if(elem.length > 1 || elem.forceArray){
-
-			if(elem.forceArray) elem.forceArray = undefined;
-			var arr = [];
-			for(var i=0;i<elem.length;i++){
-				arr.push(elem[i]);
-			}
-			return arr;
-		}
 };
 
 fw.loadScript = function(url) {
