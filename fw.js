@@ -204,7 +204,7 @@ fw.stringToXml = function(str){
 		xml = (new window.DOMParser()).parseFromString(str, "text/xml");
 	}
 	else if (typeof window.ActiveXObject !== "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
-		var xml = new window.ActiveXObject("Microsoft.XMLDOM");
+		xml = new window.ActiveXObject("Microsoft.XMLDOM");
 		xml.async = "false";
 		xml.loadXML(str);
 	}
@@ -380,10 +380,8 @@ fw.dtoIE = function(deg) {
 	var d = deg * (Math.PI / 180);
 	var cos = Math.cos(d);
 	var sin = Math.sin(d);
-	return 'M11=' + cos + ', M12=' + -sin + ', M21=' + sin + ', M22=' + cos;
-	//add the prop to actually rotate IE istead of just returning the number for it.
+	return 'progid:DXImageTransform.Microsoft.Matrix(M11=' + cos + ', M12=' + -sin + ', M21=' + sin + ', M22=' + cos + ",SizingMethod='auto expand')";
 };
-
 
 var FW = function(fwObj){
 	fwObj.createChild = function(val){
