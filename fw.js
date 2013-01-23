@@ -41,6 +41,29 @@ var fw = function(val){
 
 };
 
+fw.find = function(_this,_val){
+	var elem;
+	 if(_val.indexOf('[') === 0){
+			elem = _this.querySelectorAll(_val.replace(/^\[/,'').replace(/\]$/,''));
+			elem.forceArray = true;
+		}
+		else
+			elem = _this.querySelectorAll(_val);
+
+		if(elem.length === 1 && !elem.forceArray){
+			return elem[0];
+		}
+		else if(elem.length > 1 || elem.forceArray){
+
+			if(elem.forceArray) elem.forceArray = undefined;
+			var arr = [];
+			for(var i=0;i<elem.length;i++){
+				arr.push(elem[i]);
+			}
+			return arr;
+		}
+};
+
 fw.loadScript = function(url) {
 	var d = document,
 		t = "script",
@@ -104,7 +127,7 @@ fw.unsubscribe = function ( token ) {
 			for (var i = 0, j = fw.topics[m].length; i < j; i++) {
 				if (fw.topics[m][i].token === token) {
 					fw.topics[m].splice(i, 1);
-					return token;
+					return true;
 				}
 			}
 		}
@@ -390,26 +413,7 @@ var FW = function(fwObj){
 		return elem;
 	};
 	fwObj.find = function(val){
-		var elem;
-		if(val.indexOf('[') === 0){
-			elem = this.querySelectorAll(val.replace(/^\[/,'').replace(/\]$/,''));
-			elem.forceArray = true;
-		}
-		else
-			elem = this.querySelectorAll(val);
-
-		if(elem.length === 1 && !elem.forceArray){
-			return elem[0];
-		}
-		else if(elem.length > 1 || elem.forceArray){
-
-			if(elem.forceArray) elem.forceArray = undefined;
-			var arr = [];
-			for(var i=0;i<elem.length;i++){
-				arr.push(elem[i]);
-			}
-			return arr;
-		}
+		return fw.find(this,val);
 	};
 
 	fwObj.addClass = function(c){
@@ -553,7 +557,7 @@ var FW = function(fwObj){
 		var div = fw("<div>");
 
 		loading.appendChild(div);
-		loading.style.opacity = 0;
+		loading.opacity = 0;
 		this.appendChild(loading);
 
 		var	transformSupport = fw.styleProp("transform"),
@@ -606,12 +610,12 @@ var FW = function(fwObj){
 				d.style.marginLeft = -(wi/2) + "px";
 				d.style.marginTop = -(hi/2) + "px";
 
-				d.style.opacity = opac;
+				d.opacity = opac;
 				div.appendChild(d);
 			}
 		}
 		setTimeout(function(){
-			loading.style.opacity = 1;
+			loading.opacity = 1;
 		},1);
 	};
 
@@ -626,7 +630,7 @@ var FW = function(fwObj){
 	fwObj.removeLoading = function(){
 		var l = this.find(".loading");
 		if(l){
-			l.style.opacity = 0;
+			l.opacity = 0;
 			setTimeout(function(){l.parentNode.removeChild(l);},100);
 		}
 	};

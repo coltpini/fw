@@ -25,7 +25,7 @@ Banner.prototype.showMessage = function(bannerTitle, bannerMessage) {
 };
 
 Banner.prototype.hideMessage = function(elem) {
-	elem.style.opacity = 0;
+	elem.opacity = 0;
 	setTimeout(function(){elem.parentNode.removeChild(elem);}, 100);
 };
 
