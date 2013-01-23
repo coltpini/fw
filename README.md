@@ -74,3 +74,135 @@ would return this:
 
 ###Returns
 the combined object.
+
+Publish Subscribe
+-----------------
+
+###fw.publish
+####accepts
+a name and arguments
+
+this publishes a custom event to be consumed by the subscribers, The arguments object is passed along to the subscribers.
+
+####returns
+true or false based on success.
+
+###fw.subscribe
+####accepts
+a name and a function
+
+this would accept a push from the "name" publish and pass the arguments to the function.
+
+####returns
+A token that is used to unsubscribe
+
+###fw.unsubscribe
+####accepts
+a token (this comes from the subscribe function)
+
+This will unsubscribe a function that has been subscribed to a publish
+
+####returns
+a true or false on successful unsubscribe.
+
+Event things
+------------
+
+###fw.stop
+####accepts
+event
+
+preforms a stopPropogation (cross browser)
+
+###fw.cancel
+####accepts
+event
+
+preforms a preventDefault (cross browser)
+
+###fw.stop
+####accepts
+event
+
+preforms a stopPropogation and preventDefault (cross browser)
+
+###fw.key
+####accepts
+event
+
+This finds a key code
+*note: currently the keypress is correct for every key and keyup and keydown are a little odd*
+
+####returns
+an object {code: keyCode, char: character}
+
+fw.ajax
+-------
+###Accepts
+options object:
+	{
+		type: "GET or POST",
+		url: "the url to ajax",
+		data: "the data (not complete)",
+		success: callback function for onSuccess,
+		failure: callback function for onFailure,
+		complete: callback function for onComplete
+	}
+
+This will preform a basic ajax call, will return a string of the file content.
+
+###Returns
+an object:
+	{
+		val: string trimed to the inside of the body tag,
+		raw: raw string,
+		status: status code,
+		statusText: status text (most likely an invaluable "ok")
+	}
+
+fw.jsonp
+--------
+###Accepts
+options object:
+	{
+		url: jsonp url,
+		success: callback function for onSuccess
+	}
+
+this does this:
+1.takes the jsonp service,
+2.creates a function on window with a generated key,
+3.defines a function with the key
+3.calls fw.loadScript,
+4.when loaded the function is called, calling your success callback
+5.destroys the created function
+
+fw.stringToXml
+--------------
+###Accepts
+xml string
+
+converts the xml string to an XML document object.
+
+###Returns
+xml document object
+
+fw.xmlToJson
+###Accepts
+xml document object, or xml string
+
+Converts a xml string object (using fw.stringToXml) to json or takes an xml document object and converts to json
+
+###Returns
+JS Object
+
+fw.randomString
+---------------
+###Accepts
+length and AlphaNumeric flag
+
+Produces a string, alpha or alphanumeric, of the specified length
+
+###Returns
+string
+
