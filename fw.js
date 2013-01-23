@@ -73,11 +73,9 @@ fw.topics = {};
 fw.subUid = -1;
 
 fw.publish = function ( topic, args ) {
-
 	if (!fw.topics[topic]) {
 		return false;
 	}
-
 	setTimeout(function () {
 		var subscribers = fw.topics[topic],
 			len = subscribers ? subscribers.length : 0;
@@ -141,6 +139,7 @@ fw.key = function(e){
 	e = e || window.event;
 	var code = e.keyCode || e.which || undefined;
 	// this needs to work the same for keyup, keydown, and keypress.
+	//don't know if it can.
 	var character = String.fromCharCode(code);
 	return {code: code, char: character};
 };
@@ -156,7 +155,7 @@ fw.ajax = function(options){
 	};
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = onStatusChange;
-	// how do I apply qs params?
+	// how do I apply qs params? through data?
 	request.open(o.type, o.url, true);
 	request.send(o.data);
 	function onStatusChange(){
@@ -200,15 +199,14 @@ fw.jsonp = function(options){
 
 fw.stringToXml = function(str){
 	var xml;
-		str = str.replace(/[\t\n]/gi,"");
+	str = str.replace(/[\t\n]/gi,"");
 	if (typeof window.DOMParser !== "undefined") {
 		xml = (new window.DOMParser()).parseFromString(str, "text/xml");
 	}
 	else if (typeof window.ActiveXObject !== "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
-		var iexml = new window.ActiveXObject("Microsoft.XMLDOM");
-		iexml.async = "false";
-		iexml.loadXML(str);
-		xml = iexml;
+		var xml = new window.ActiveXObject("Microsoft.XMLDOM");
+		xml.async = "false";
+		xml.loadXML(str);
 	}
 	else
 		xml = undefined;
@@ -270,7 +268,7 @@ fw.randomString = function(length, isAlphaNumeric){
 		else if(gn < 91){return String.fromCharCode(gn > 64 ? gn : 65 + Math.floor(rn*26));}
 		else if(gn > 90){return String.fromCharCode(gn > 96 && gn < 123 ? gn : 97 + Math.floor(rn*26));}
 	};
-	while(s.length< length) s+= randomchar();
+	while(s.length < length) s += randomchar();
 	return s;
 };
 
@@ -307,7 +305,7 @@ fw.proxy = function(func, obj, _this) {
 
 
 fw.styleProp = function(prop){
-	var browsers = ["chrome","safari","firefox","opera","ie",""],
+	var browsers = ["","chrome","safari","firefox","opera","ie",""],
 	support = {},
 	p = prop.charAt(0).toUpperCase() + prop.slice(1);
 
@@ -342,7 +340,7 @@ fw.checkCssPropSupport = function(prop, browser){
 			break;
 		default:
 			p='';
-			prop=prop.toLowerCase();
+			prop=prop.charAt(0).toLowerCase() + prop.slice(1);
 			break;
 	}
 	support.is = typeof(el.style[p + prop]) !== "undefined";
