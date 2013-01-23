@@ -7,7 +7,7 @@ Use Doc
 ==
 
 fw
-___________
+--
 
 ###Accepts
 a string or an object.
