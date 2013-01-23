@@ -86,9 +86,7 @@ fw.publish = function ( topic, args ) {
 	}, 0);
 
 	return true;
-
 };
-
 fw.subscribe = function ( topic, func ) {
 	if (!fw.topics[topic]) {
 		fw.topics[topic] = [];
@@ -384,6 +382,8 @@ fw.dtoIE = function(deg) {
 };
 
 var FW = function(fwObj){
+	if(fwObj.isFW){ return fwObj;}
+	fwObj.isFW = true;
 	fwObj.createChild = function(val){
 		elem = document.createElement(val.replace(/^</,'').replace(/>$/,''));
 		this.appendChild(elem);
