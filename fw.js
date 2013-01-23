@@ -25,8 +25,7 @@ fw.find = function(_this,_val){
 	if(elem.length === 1 && !elem.forceArray){
 		return elem[0];
 	}
-	else {
-
+	else if(elem.length > 1 || elem.forceArray){
 		if(elem.forceArray) elem.forceArray = undefined;
 		var arr = [];
 		for(var i=0;i<elem.length;i++){
@@ -41,6 +40,7 @@ fw.find = function(_this,_val){
 		}
 		return arr;
 	}
+	return undefined;
 };
 
 fw.loadScript = function(url) {
@@ -391,6 +391,7 @@ var FW = function(fwObj){
 		this.appendChild(elem);
 		return elem;
 	};
+
 	fwObj.find = function(val){
 		return fw.find(this,val);
 	};
@@ -530,14 +531,11 @@ var FW = function(fwObj){
 		else
 			this.style.position = 'relative';
 
-		var loading = fw('<div>').addClass('loading');
+		var loading = this.createChild('<div>').addClass('loading');
 		if(typeof(style) === "string")loading.addClass(style);
-
-		var div = fw("<div>");
-
-		loading.appendChild(div);
 		loading.opacity = 0;
-		this.appendChild(loading);
+
+		var div = loading.createChild("div");
 
 		var	transformSupport = fw.styleProp("transform"),
 			animationSupport = fw.styleProp("animation"),
@@ -551,23 +549,22 @@ var FW = function(fwObj){
 		}
 		else{
 
-			var segments = seg ? seg : 8,
+			var segments = seg || 8,
 				degrees = Math.round(360 / segments);
 
 			for(var i=1; i<segments+1; i++){
 
-				var d = fw("<div>").addClass('segment');
-				var span = fw("<span>");
+				var d = div.createChild("div").addClass('segment'),
+					span = d.createChild("span"),
+					deg = (degrees * i) + "deg",
+					num=Math.random()*3,
+					w=8+"px",h=30+"px",hi=30,wi=8,
+					opac = 2 / i;
 
-				d.appendChild(span);
-
-				var deg = degrees*i + "deg";
 				d.style[transformSupport.prop] = "rotate(" + deg + ")";
-				var num=Math.random()*3;
 				d.style[animationSupport.prop] = "loader " + num + "s linear infinite";
-				var w=8+"px",h=30+"px",hi=30,wi=8;
-				var opac = 2 / i;
 
+				//TODO: make this extendable.
 				if(opt === "tornado"){
 					wi = num * i * i;
 				}
@@ -588,9 +585,7 @@ var FW = function(fwObj){
 				d.style.height = h;
 				d.style.marginLeft = -(wi/2) + "px";
 				d.style.marginTop = -(hi/2) + "px";
-
 				d.opacity = opac;
-				div.appendChild(d);
 			}
 		}
 		setTimeout(function(){

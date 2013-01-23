@@ -29,8 +29,14 @@
 	background: @loading-whiteTrans;
 	padding: 0 !important;
 
-	&.light{background: @loading-whiteTrans;}
-	&.dark{background: @loading-blackTrans;}
+	&.light{
+		background: rgb(255,255,255);//fadeIn(@loading-whtieTrans,100%);
+		background: @loading-whiteTrans;
+	}
+	&.dark{
+		background: rgb(0,0,0);//fadeIn(@loading-blackTrans,100%);
+		background: @loading-blackTrans;
+	}
 	&.transparent{background: transparent;}
 
 	> div {
@@ -46,7 +52,7 @@
 	    padding: 0 !important;
 
 	    &.fallback{
-	    	background: transparent url(img/loader.gif) no-repeat 50% 50%;
+	    	background: #fff url(loader.gif) no-repeat 50% 50%;
 	    	height: 30px;
 	    	width: 30px;
 	    }
