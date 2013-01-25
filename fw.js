@@ -144,6 +144,54 @@ fw.key = function(e){
 	return {code: code, char: character};
 };
 
+fw.pointerPosition = function(e){
+	if(!e.touches){
+		var x = e.pageX,
+			y = e.pageY;
+		if ( x === undefined && e.clientX !== null ) {
+			edoc = e.target.ownerDocument || document;
+			doc = edoc.documentElement;
+			body = edoc.body;
+
+			x = e.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
+			y = e.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
+		}
+		return {x:x,y:y};
+	}
+	else {
+		var obj = {
+				x: 0,
+				y: 0,
+				points: []
+			},
+			tempx = 0,
+			tempy = 0;
+		for(var i=0;i<e.touches.length;i++){
+			var t = e.touches.item(i);
+			tempx += t.clientX;
+			tempy += t.clientY;
+			obj.points.push({x:t.clientX,y:t.clientY});
+		}
+		obj.x = tempx / i;
+		obj.y = tempy / i;
+		return obj;
+	}
+};
+
+fw.mouseWheel = function(e){
+	var deltaX = 0;
+	if(e.wheelDelta) delta = e.wheelDelta/120;
+	if(e.detail) delta = -e.detail/3;
+    var deltaY = delta;
+    if(e.axis !== undefined && e.axis === e.HORIZONTAL_AXIS){
+        deltaY = 0;
+        deltaX = -1*delta;
+    }
+    if(e.wheelDeltaY !== undefined) deltaY = e.wheelDeltaY/120;
+    if(e.wheelDeltaX !== undefined) deltaX = -1*e.wheelDeltaX/120;
+    return {x:deltaX,y:deltaY};
+};
+
 fw.ajax = function(options){
 	var o = {
 		type: options.type || "GET",
