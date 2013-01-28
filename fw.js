@@ -621,6 +621,7 @@ var FW = function(fwObj){
 					span.style.borderRadius = "2px";
 					wi = 2 * Math.PI * 8;
 					opac = 10 / (i+1);
+
 				}
 				else if(opt > 0){
 					wi = opt;
@@ -633,7 +634,7 @@ var FW = function(fwObj){
 				d.style.height = h;
 				d.style.marginLeft = -(wi/2) + "px";
 				d.style.marginTop = -(hi/2) + "px";
-				d.opacity = opac;
+				d.opacity(opac);
 			}
 		}
 		setTimeout(function(){
