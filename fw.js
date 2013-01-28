@@ -573,7 +573,7 @@ var FW = function(fwObj){
 		return this;
 	};
 
-	fwObj.addLoading = function(seg, opt, style){
+	fwObj.addLoading = function(seg, opt, style, loadingFunction){
 		this.removeLoading();
 		if(this.style.position === "relative" || this.style.position === "absolute"){}
 		else
@@ -581,7 +581,6 @@ var FW = function(fwObj){
 
 		var loading = this.createChild('<div>').addClass('loading');
 		if(typeof(style) === "string")loading.addClass(style);
-		loading.opacity = 0;
 
 		var div = loading.createChild("div");
 
@@ -596,7 +595,6 @@ var FW = function(fwObj){
 			div.addClass('fallback');
 		}
 		else{
-
 			var segments = seg || 8,
 				degrees = Math.round(360 / segments);
 
@@ -606,35 +604,38 @@ var FW = function(fwObj){
 					span = d.createChild("span"),
 					deg = (degrees * i) + "deg",
 					num=Math.random()*3,
-					w=8+"px",h=30+"px",hi=30,wi=8,
+					hi=30,
+					wi=8,
 					opac = 2 / i;
 
 				d.style[transformSupport.prop] = "rotate(" + deg + ")";
 				d.style[animationSupport.prop] = "loader " + num + "s linear infinite";
 
-				//TODO: make this extendable.
-				if(opt === "tornado"){
-					wi = num * i * i;
-				}
-				else if(opt === "traditional"){
-					d.style[animationSupport.prop] = "none";
-					span.style.borderRadius = "2px";
-					wi = 2 * Math.PI * 8;
-					opac = 10 / (i+1);
 
+				if(loadingFunction){
+					loadingFunction(segments,opt,i,d,span);
 				}
-				else if(opt > 0){
-					wi = opt;
-				}
+				else {
+					if(opt === "tornado"){
+						wi = num * i * i;
+					}
+					else if(opt === "traditional"){
+						d.style[animationSupport.prop] = "none";
+						span.style.borderRadius = "2px";
+						wi = 2 * Math.PI * 8;
+						opac = 10 / (i+1);
+					}
+					else if(opt > 0){
+						wi = opt;
+					}
 
-				hi = wi * Math.PI / seg;
-				h=hi+"px";
-				w = wi + "px";
-				d.style.width = w;
-				d.style.height = h;
-				d.style.marginLeft = -(wi/2) + "px";
-				d.style.marginTop = -(hi/2) + "px";
-				d.opacity(opac);
+					hi = wi * Math.PI / seg;
+					d.style.width = wi + "px";
+					d.style.height = hi + "px";
+					d.style.marginLeft = -(wi/2) + "px";
+					d.style.marginTop = -(hi/2) + "px";
+					d.opacity(opac);
+				}
 			}
 		}
 		setTimeout(function(){
