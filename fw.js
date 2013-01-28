@@ -638,9 +638,6 @@ var FW = function(fwObj){
 				}
 			}
 		}
-		setTimeout(function(){
-			loading.opacity = 1;
-		},1);
 	};
 
 
