@@ -585,11 +585,7 @@ var FW = function(fwObj){
 		var div = loading.createChild("div");
 
 		var	transformSupport = fw.styleProp("transform"),
-			animationSupport = fw.styleProp("animation"),
-			transition = fw.styleProp("transition");
-
-		if(transition.is)
-			loading.style[transition.prop] = "opacity 100ms ease-out";
+			animationSupport = fw.styleProp("animation");
 
 		if(!transformSupport.is || !animationSupport.is){
 			div.addClass('fallback');
@@ -610,7 +606,6 @@ var FW = function(fwObj){
 
 				d.style[transformSupport.prop] = "rotate(" + deg + ")";
 				d.style[animationSupport.prop] = "loader " + num + "s linear infinite";
-
 
 				if(loadingFunction){
 					loadingFunction(segments,opt,i,d,span);
