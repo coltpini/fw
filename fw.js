@@ -149,8 +149,8 @@ fw.pointerOffset = function(e){
 		left = 0,
 		top = 0;
 	do {
-			left += elem.offsetLeft;
-			top += elem.offsetTop;
+		left += elem.offsetLeft;
+		top += elem.offsetTop;
 	} while (elem = elem.offsetParent);
 
 	return this.pointerPosition(e,top,left);
