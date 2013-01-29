@@ -144,10 +144,27 @@ fw.key = function(e){
 	return {code: code, char: character};
 };
 
-fw.pointerPosition = function(e){
+fw.pointerOffset = function(e){
+	var elem = e.currentTarget,
+		left = 0,
+		top = 0;
+	do {
+			left += elem.offsetLeft;
+			top += elem.offsetTop;
+	} while (elem = elem.offsetParent);
+
+	return this.pointerPosition(e,top,left);
+};
+
+fw.pointerPosition = function(e,top,left){
+	var elem = e.currentTarget;
+	top = top || 0,
+	left = left || 0;
+
 	if(!e.touches){
 		var x = e.pageX,
 			y = e.pageY;
+
 		if ( x === undefined && e.clientX !== null ) {
 			edoc = e.target.ownerDocument || document;
 			doc = edoc.documentElement;
@@ -156,6 +173,8 @@ fw.pointerPosition = function(e){
 			x = e.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
 			y = e.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
 		}
+		x = x - left;
+		y = y - top;
 		return {x:x,y:y};
 	}
 	else {
@@ -170,10 +189,10 @@ fw.pointerPosition = function(e){
 			var t = e.touches.item(i);
 			tempx += t.clientX;
 			tempy += t.clientY;
-			obj.points.push({x:t.clientX,y:t.clientY});
+			obj.points.push({x:t.clientX - left,y:t.clientY - top});
 		}
-		obj.x = tempx / i;
-		obj.y = tempy / i;
+		obj.x = (tempx / i) - left;
+		obj.y = (tempy / i) - top;
 		return obj;
 	}
 };
@@ -351,6 +370,14 @@ fw.proxy = function(func, obj, _this) {
 	};
 };
 
+fw.cssStyle = function(elem,prop){
+	if(getComputedStyle){
+		return getComputedStyle(elem)[prop];
+	}
+	else{
+		return elem.currentStyle[prop];
+	}
+};
 
 fw.styleProp = function(prop){
 	var browsers = ["","chrome","safari","firefox","opera","ie",""],
