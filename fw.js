@@ -19,6 +19,9 @@ fw.find = function(_this,_val){
 		elem = _this.querySelectorAll(_val.replace(/^\[/,'').replace(/\]$/,''));
 		elem.forceArray = true;
 	}
+	else if(_val.indexOf("^[") === 0){
+		elem = _this.querySelectorAll(_val.substring(1));
+	}
 	else
 		elem = _this.querySelectorAll(_val);
 
