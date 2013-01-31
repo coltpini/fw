@@ -1,7 +1,6 @@
 fw.extendElement("addLoading", function(seg, opt, style, loadingFunction){
 	this.removeLoading();
-	if(this.style.position === "relative" || this.style.position === "absolute" || this.style.position === "fixed"){}
-	else
+	if(this.style.position === "static" || fw.cssStyle(this,"position") === "static")
 		this.style.position = 'relative';
 
 	var loading = this.createChild('<div>').addClass('loading');
