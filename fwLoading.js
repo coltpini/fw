@@ -1,6 +1,6 @@
 fw.extendElement("addLoading", function(seg, opt, style, loadingFunction){
 	this.removeLoading();
-	if(this.style.position === "relative" || this.style.position === "absolute"){}
+	if(this.style.position === "relative" || this.style.position === "absolute" || this.style.position === "fixed"){}
 	else
 		this.style.position = 'relative';
 
