@@ -1,0 +1,5 @@
+.contextMenu{position:absolute;display:none;z-index:1000;border:1px solid #ddd;background:rgba(255, 255, 255, 0.95);-webkit-border-radius:4px;border-radius:4px;-webkit-background-clip:padding-box;-moz-background-clip:padding;background-clip:padding-box;-webkit-box-shadow:0px 3px 6px 0px rgba(0, 0, 0, 0.2);box-shadow:0px 3px 6px 0px rgba(0, 0, 0, 0.2);}.contextMenu span,.contextMenu a{display:block;border:1px solid transparent;border-left:none;border-right:none;padding:2px 10px;cursor:pointer;color:#333;}.contextMenu span:visited,.contextMenu a:visited{color:#333;}
+.contextMenu span:hover,.contextMenu a:hover{background:#69f;border-top-color:#58e;border-bottom-color:#58e;color:#fff;-webkit-box-shadow:0px 0px 2px 0px rgba(0, 0, 0, 0.1);box-shadow:0px 0px 2px 0px rgba(0, 0, 0, 0.1);}
+.contextMenu span:first-child,.contextMenu a:first-child{margin-top:5px;}
+.contextMenu span:last-child,.contextMenu a:last-child{margin-bottom:5px;}
+.contextMenu hr{background:none;border:none;border-top:1px solid #ddd;margin:5px 0;}
