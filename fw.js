@@ -167,7 +167,8 @@ fw.pointerPosition = function(e,top,left){
 	if(!e.touches){
 		var position = e.currentTarget.style.position !== "" ? e.currentTarget.style.position : fw.cssStyle(e.currentTarget,'position');
 		if(position === "fixed"){
-			return {x:e.clientX,y:e.clientY};
+
+			return {x:e.clientX - e.currentTarget.offsetLeft,y:e.clientY - e.currentTarget.offsetTop};
 		}
 		var x = e.pageX,
 			y = e.pageY;
