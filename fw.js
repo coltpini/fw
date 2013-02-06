@@ -162,7 +162,7 @@ fw.pointerOffset = function(e){
 		}
 	} while (elem = elem.offsetParent);
 
-
+console.log(left,top);
 	return this.pointerPosition(e,top,left);
 };
 
