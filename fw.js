@@ -155,11 +155,11 @@ fw.pointerOffset = function(e){
 		left += elem.offsetLeft;
 		top += elem.offsetTop;
 		var position = elem.style.position !== "" ? elem.style.position : fw.cssStyle(elem,'position');
-		if(position === "fixed"){
-			left += elem.offsetLeft;
-			top += elem.offsetTop;
-			break;
-		}
+		// if(position === "fixed"){
+		// 	left += elem.offsetLeft;
+		// 	top += elem.offsetTop;
+		// 	break;
+		// }
 	} while (elem = elem.offsetParent);
 
 console.log(left,top);
