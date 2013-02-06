@@ -154,12 +154,12 @@ fw.pointerOffset = function(e){
 	do {
 		left += elem.offsetLeft;
 		top += elem.offsetTop;
-		var position = elem.style.position !== "" ? elem.style.position : fw.cssStyle(elem,'position');
+		/*var position = elem.style.position !== "" ? elem.style.position : fw.cssStyle(elem,'position');
 		if(position === "fixed"){
 			left += elem.offsetLeft;
 			top += elem.offsetTop;
 			break;
-		}
+		}*/
 	} while (elem = elem.offsetParent);
 
 
