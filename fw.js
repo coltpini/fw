@@ -154,7 +154,14 @@ fw.pointerOffset = function(e){
 	do {
 		left += elem.offsetLeft;
 		top += elem.offsetTop;
+		var position = elem.style.position !== "" ? elem.style.position : fw.cssStyle(elem,'position');
+		if(position === "fixed"){
+			left += elem.offsetLeft;
+			top += elem.offsetTop;
+			break;
+		}
 	} while (elem = elem.offsetParent);
+	console.log(top,left);
 
 	return this.pointerPosition(e,top,left);
 };
@@ -165,11 +172,6 @@ fw.pointerPosition = function(e,top,left){
 	left = left || 0;
 
 	if(!e.touches){
-		var position = e.currentTarget.style.position !== "" ? e.currentTarget.style.position : fw.cssStyle(e.currentTarget,'position');
-		if(position === "fixed"){
-
-			return {x:e.clientX - e.currentTarget.offsetLeft,y:e.clientY - e.currentTarget.offsetTop};
-		}
 		var x = e.pageX,
 			y = e.pageY;
 
