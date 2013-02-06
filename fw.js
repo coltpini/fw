@@ -154,24 +154,29 @@ fw.pointerOffset = function(e){
 	do {
 		left += elem.offsetLeft;
 		top += elem.offsetTop;
-		var position = elem.style.position !== "" ? elem.style.position : fw.cssStyle(elem,'position');
-		// if(position === "fixed"){
-		// 	left += elem.offsetLeft;
-		// 	top += elem.offsetTop;
-		// 	break;
-		// }
+		var pos;
+		if(elem.style.position !== ""){
+			pos = elem.style.position;
+		}
+		else{
+			pos = fw.cssStyle(elem,'position');
+		}
+		fixed = pos === "fixed";
 	} while (elem = elem.offsetParent);
 
-console.log(left,top);
-	return this.pointerPosition(e,top,left);
+	return this.pointerPosition(e,top,left,fixed);
 };
 
-fw.pointerPosition = function(e,top,left){
+fw.pointerPosition = function(e,top,left,fixed){
 	var elem = e.currentTarget;
 	top = top || 0,
 	left = left || 0;
 
 	if(!e.touches){
+
+		if(fixed){
+			return {x:e.clientX - elem.offsetLeft, y:e.clientY - elem.offsetTop};
+		}
 		var x = e.pageX,
 			y = e.pageY;
 
