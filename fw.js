@@ -161,7 +161,7 @@ fw.pointerOffset = function(e){
 			break;
 		}
 	} while (elem = elem.offsetParent);
-	console.log(top,left);
+
 
 	return this.pointerPosition(e,top,left);
 };
