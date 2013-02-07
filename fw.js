@@ -324,7 +324,7 @@ fw.proxy = function(func, obj, _this) {
 };
 
 fw.cssStyle = function(elem,prop){
-	if(getComputedStyle){
+	if(typeof(getComputedStyle) !== "undefined"){
 		return getComputedStyle(elem)[prop];
 	}
 	else{
