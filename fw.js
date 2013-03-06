@@ -249,9 +249,9 @@ fw.ajax = function(options){
 				statusText: request.statusText
 			};
 
-			if(o.success && obj.status === 200)
+			if(o.success && obj.status >= 200 && obj.status < 300)
 				o.success(obj);
-			else if(o.failure && obj.status !== 200)
+			else if(o.failure && obj.status < 200 && obj.status >= 300)
 				o.failure(obj);
 
 			if(o.complete)
