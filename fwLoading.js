@@ -62,6 +62,6 @@ fw.extendElement("removeLoading",function(){
 	var l = this.find(".loading");
 	if(l){
 		l.opacity = 0;
-		setTimeout(function(){l.parentNode.removeChild(l);},100);
+		setTimeout(function(){l && l.parentNode ? l.parentNode.removeChild(l) : ""},100);
 	}
 });
