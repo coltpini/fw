@@ -7,7 +7,7 @@ var fw = function(val){
 
 	if(val.indexOf('<') === 0){
 		elem = document.createElement(val.replace(/^</,'').replace(/>$/,''));
-		return elem;
+		return FW(elem);
 	}
 
 	return fw.find(document,val);
@@ -26,13 +26,13 @@ fw.find = function(_this,_val){
 		elem = _this.querySelectorAll(_val);
 
 	if(elem.length === 1 && !elem.forceArray){
-		return elem[0];
+		return FW(elem[0]);
 	}
 	else if(elem.length > 1 || elem.forceArray){
 		if(elem.forceArray) elem.forceArray = undefined;
 		var arr = [];
 		for(var i=0;i<elem.length;i++){
-			arr.push(elem[i]);
+			arr.push(FW(elem[i]));
 		}
 		if(!arr.forEach){
 			arr.forEach = function(callback){
@@ -227,14 +227,16 @@ fw.mouseWheel = function(e){
 };
 
 fw.ajax = function(options){
-	var o = {
-		type: options.type || "GET",
-		url: options.url,
-		data: options.data || null,
-		success: options.success,
-		failure: options.failure,
-		complete: options.complete
-	};
+	var empty = function(){},
+		o = {
+			type: options.type || "GET",
+			url: options.url,
+			data: options.data || null,
+			success: options.success || empty,
+			failure: options.failure || empty,
+			complete: options.complete || empty,
+			container: options.container || "body"
+		};
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = onStatusChange;
 	// how do I apply qs params? through data?
@@ -243,7 +245,7 @@ fw.ajax = function(options){
 	function onStatusChange(){
 		if(request.readyState === 4){
 			var obj = {
-				val: trimToBody(request.responseText),
+				val: trimTo(request.responseText,o.container),
 				raw: request.responseText,
 				status: request.status,
 				statusText: request.statusText
@@ -258,12 +260,25 @@ fw.ajax = function(options){
 				o.complete(obj);
 		}
 	}
-	function trimToBody(val){
-		try{
+	var trimTo = function(val,sel){
+		if(sel){
+			// strip it down to the body
 			val = val.match(/<body.*?>[\w\W]+<\/body>/)[0].replace(/<body.*?>/,'').replace(/<\/body>/,'');
-		}catch(err){}
+			// put it in an iframe so any exicutions won't bother the current document.
+			var iframe = fw('body').createChild('iframe');
+			iframe.style.display = 'none';
+			// get the doc for the iframe
+			var idoc = iframe.document || iframe.contentDocument || iframe.contentWindow.document;
+			// inject our knewly aquired val into the iframe
+			idoc.body.innerHTML = val;
+			// find what you need now and give the innerhtml
+			// do I include the elem?
+			val = fw.find(idoc,sel).innerHTML;
+			//and now remove the iframe
+			iframe.removeSelf();
+		}
 		return val;
-	}
+	};
 };
 fw.jsonp = function(options){
 	var o = {
@@ -422,6 +437,10 @@ var FW = function(fwObj){
 
 	fwObj.find = function(val){
 		return fw.find(this,val);
+	};
+
+	fwObj.removeSelf = function(){
+		this.parentNode.removeChild(this);
 	};
 
 	fwObj.addClass = function(c){
