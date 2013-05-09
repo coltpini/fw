@@ -253,7 +253,7 @@ fw.ajax = function(options){
 
 			if(o.success && obj.status >= 200 && obj.status < 300)
 				o.success(obj);
-			else if(o.failure && obj.status < 200 && obj.status >= 300)
+			else if(o.failure && (obj.status < 200 || obj.status >= 300))
 				o.failure(obj);
 
 			if(o.complete)
@@ -262,20 +262,22 @@ fw.ajax = function(options){
 	}
 	var trimTo = function(val,sel){
 		if(sel){
-			// strip it down to the body
-			val = val.match(/<body.*?>[\w\W]+<\/body>/)[0].replace(/<body.*?>/,'').replace(/<\/body>/,'');
-			// put it in an iframe so any exicutions won't bother the current document.
-			var iframe = fw('body').createChild('iframe');
-			iframe.style.display = 'none';
-			// get the doc for the iframe
-			var idoc = iframe.document || iframe.contentDocument || iframe.contentWindow.document;
-			// inject our knewly aquired val into the iframe
-			idoc.body.innerHTML = val;
-			// find what you need now and give the innerhtml
-			// do I include the elem?
-			val = fw.find(idoc,sel).innerHTML;
-			//and now remove the iframe
-			iframe.removeSelf();
+			try{
+				// strip it down to the body
+				val = val.match(/<body.*?>[\w\W]+<\/body>/)[0].replace(/<body.*?>/,'').replace(/<\/body>/,'');
+				// put it in an iframe so any exicutions won't bother the current document.
+				var iframe = fw('body').createChild('iframe');
+				iframe.style.display = 'none';
+				// get the doc for the iframe
+				var idoc = iframe.document || iframe.contentDocument || iframe.contentWindow.document;
+				// inject our knewly aquired val into the iframe
+				idoc.body.innerHTML = val;
+				// find what you need now and give the innerhtml
+				// do I include the elem?
+				val = fw.find(idoc,sel).innerHTML;
+				//and now remove the iframe
+				iframe.removeSelf();
+			}catch(err){}
 		}
 		return val;
 	};
@@ -522,7 +524,7 @@ var FW = function(fwObj){
 			return false;
 		}
 	};
-
+	//TODO: add a selector so the event can be attached to a parent?
 	fwObj.addListener = window.addListener = function(eventName,handler,propagation,obj){
 		var p = typeof(propagation)!=="undefined" ? propagation : false;
 		//this may be better attached to the element.
