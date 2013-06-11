@@ -1,0 +1,639 @@
+<!doctype html>
+<html>
+<head>
+	<title>Test suite for fw.js</title>
+	<script src="fw-min.js"></script>
+	<script src="banner-min.js"></script>
+	<script src="modal-min.js"></script>
+	<script src="fwLoading-min.js"></script>
+
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="loading.css" />
+	<link rel="stylesheet" type="text/css" href="banner.css" />
+	<link rel="stylesheet" type="text/css" href="modal.css" />
+	<style>
+		#wholeContainer{
+			width: 20%;
+		}
+		.demoContainer{
+			position: absolute;
+			top: 0;
+			right: 0;
+			list-style: none;
+			margin: 0;
+			padding: 5px;
+			margin-left: 300px;
+			width: 80%;
+			margin-left: 250px;
+		}
+		.square {
+			height: 50px;
+			width: 50px;
+			display: inline-block;
+			background: #69f;
+			margin: 1px;
+			padding: 0;
+			position: relative;
+
+
+			-webkit-transition: all 0.3s ease-out;
+			   -moz-transition: all 0.3s ease-out;
+				 -o-transition: all 0.3s ease-out;
+					transition: all 0.3s ease-out;
+
+		}
+		#wholeContainer > div {
+			display: none;
+		}
+		#wholeContainer > div.active {
+			display: block;
+		}
+		p.section{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		var container = fw('<ul>').addClass('demoContainer');
+		for (var i = 60; i >= 0; i--) {
+			container.createChild('li').addClass('square');
+			container.createChild('<li>').addClass('square').addClass('other');
+		};
+		document.body.appendChild(container);
+	</script>
+	<div id="wholeContainer">
+		<div id="fw" class="active">
+			<h1>fw()</h1>
+			<p>information</p>
+			<select class="findSelector">
+				<option></option>
+				<option value=".square">.square</option>
+				<option value=".other">.other</option>
+				<option value=".square:first-child">.square:first-child</option>
+				<option value="[.square:nth-child(10)]">[.square:nth-child(10)]</option>
+				<option value="^[class]">^[class]</option>
+				<option value="new">&lt;li&gt;</option>
+			</select>
+			<p class="feedback"></p>
+			<script>
+				fw('#fw .findSelector').addListener('change',function(){
+					var feedback = fw('#fw .feedback');
+					fw('.square').forEach(function(elem){elem.style.background = "#69f";})
+					feedback.innerHTML = "";
+					if(this.value === "new"){
+						var newli = container.createChild('<li>').addClass('square');
+						newli.opacity(0);
+						setTimeout(function(){newli.opacity(1);},1);
+						feedback.innerHTML = "created new li";
+					}
+					else if(this.value !== ""){
+
+						var t = container.find(this.value);
+						if(t.length)
+							t.forEach(function(elem){elem.style.background = "#f96";});
+						else
+							t.style.background = "#f96";
+
+						var num = t.length ? t.length : 1;
+						feedback.innerHTML = "returned " + num + " item" + (num>1?"s":"") + " as an " + (t.length?"Array":"Element");
+					}
+					console.log(this.value);
+				});
+			</script>
+		</div>
+
+		<div id="pubsub">
+			<h1>Publish Subscribe pattern</h1>
+			<h2>fw.publish</h2>
+			<input type="button" id="publish" value="publish" />
+
+			<h2>fw.subscribe / fw.unsubscribe</h2>
+			<input type="button" id="subscribe" value="unsubscribe"/>
+
+			<p class="feedback"></p>
+
+			<script>
+				var ps = fw('#pubsub');
+				var sub = function(data){
+					ps.find('.feedback').innerHTML += data;
+					container.find('.square').forEach(function(elem){
+						if(data === "sub1")
+							elem.style.background = "rgb(139, 235, 46)";
+						else if(elem.containsClass('other'))
+							elem.style.background = "rgb(215, 255, 53)";
+					});
+				};
+				fw.subscribe('sub1',sub);
+				var sub2 = fw.subscribe('sub2',sub);
+
+				ps.find('#publish').addListener('click',function(){
+					ps.find('.feedback').innerHTML = "";
+					fw.publish("sub1","sub1");
+					fw.publish("sub2","sub2");
+				});
+
+				ps.find('#subscribe').addListener('click',function(e){
+					if(e.currentTarget.value === "unsubscribe"){
+						fw.unsubscribe(sub2);
+						ps.find('#subscribe').value = "subscribe";
+
+					}
+					else {
+						sub2 = fw.subscribe('sub2',sub);
+						ps.find('#subscribe').value = "unsubscribe";
+
+					}
+				});
+			</script>
+		</div>
+
+		<p class="section">Event Functions</p>
+
+		<div id="stopCancel">
+			<h1>fw.stop / fw.cancel / fw.stopCancel</h1>
+			<style type="text/css">
+				#stopCancel .eventer{
+					display: inline-block;
+					background: rgb(140, 78, 219);
+					min-height: 20px;
+					min-width: 20px;
+					padding: 20px;
+				}
+				#stopCancel #inner {
+					background: rgb(76, 40, 122);
+				}
+			</style>
+			<div class="eventer" id="outer">
+				<a href="#yepper" class="eventer" id="inner"></a>
+			</div>
+			<p class="feedback"></p>
+			<script type="text/javascript">
+				var sc = fw('#stopCancel');
+				var eventerHandler = function(e){
+					fw.stopCancel(e);
+
+					sc.find('.feedback').innerHTML = "you clicked the <em>" + e.currentTarget.id + "</em> element";
+					container.find('.square').forEach(function(elem){
+						elem.style.background = fw.cssStyle(e.currentTarget,'background');
+					});
+				};
+				sc.find('.eventer').forEach(function(elem){
+					elem.addListener('click',eventerHandler);
+				});
+			</script>
+		</div>
+		<div id="key">
+			<h1>fw.key</h1>
+			<input />
+			<p class="feedback"></p>
+			<script type="text/javascript">
+				var k = fw('#key');
+				var keyHandler = function(e){
+
+					var fb = k.find('.feedback');
+					if(e.type === "keydown")
+						fb.innerHTML = "";
+					var kp = fw.key(e);
+					fb.innerHTML += "<div>" + e.type + ": {code: " + kp.code + ", char: " + kp.char + "}</div>";
+					if(e.type === "keypress")
+						fw.stopCancel(e);
+				};
+				k.find('input').addListener('keydown',keyHandler);
+				k.find('input').addListener('keyup',keyHandler);
+				k.find('input').addListener('keypress',keyHandler);
+			</script>
+		</div>
+		<div id="pointer">
+			<h1>fw.pointerOffset / fw.pointerPosition</h1>
+			<p class="feedback"></p>
+			<script type="text/javascript">
+				var pointerHandler = function(e){
+					fw.stopCancel(e);
+					var pp = fw.pointerPosition(e),
+						po = fw.pointerOffset(e);
+					fw('#pointer .feedback').innerHTML = "pointerPosition = {x: " + pp.x + ", y: " + pp.y + "}; pointerOffset = {x: " + po.x + ", y: " + po.y + "}";
+				}
+				fw('.square').forEach(function(elem){
+					elem.addListener('mousemove',pointerHandler);
+					elem.addListener('touchstart',pointerHandler);
+				});
+			</script>
+		</div>
+
+		<div>
+			<h1>fw.mouseWheel</h1>
+			<p class="feedback"></p>
+			<script type="text/javascript">
+
+			</script>
+		</div>
+		<p class="section">Async stuffs</p>
+		<div>
+			<h1>fw.loadScript</h1>
+		</div>
+		<div>
+			<h1>fw.ajax</h1>
+		</div>
+		<div>
+			<h1>fw.jsonp</h1>
+		</div>
+		<div>
+			<h1>fw.randomString</h1>
+		</div>
+		<p class="section">Utils</p>
+		<div>
+			<h1>fw.extend</h1>
+		</div>
+		<div>
+			<h1>fw.qs</h1>
+		</div>
+		<div>
+			<h1>fw.proxy</h1>
+		</div>
+		<div>
+			<h1>fw.cookie</h1>
+		</div>
+		<p class="section">css stuffs</p>
+		<div id="cssStyle">
+			<h1>fw.cssStyle</h1>
+			<input type="button" value="get css background">
+			<p class="feedback"></p>
+			<script type="text/javascript">
+				fw('#cssStyle input').addListener('click',function(e){
+					fw('#cssStyle .feedback').innerHTML = ".square css style for backgroundColor is: " + fw.cssStyle(fw('[.square]')[0],'backgroundColor');
+				});
+			</script>
+		</div>
+		<div>
+			<h1>fw.styleProp</h1>
+		</div>
+		<!-- fw.checkCssPropSupport -->
+		<div>
+			<h1>fw.extendElement</h1>
+			<!-- fw.extendObject -->
+		</div>
+
+		<p class="section">element functions</p>
+		<div>
+			<h1>elem.isFW = true;</h1>
+		</div>
+		<div>
+			<h1>elem.createChild</h1>
+		</div>
+		<div>
+			<h1>elem.find</h1>
+		</div>
+		<div>
+			<h1>elem.addClass</h1>
+		</div>
+		<div>
+			<h1>elem.removeClass</h1>
+		</div>
+		<div>
+			<h1>elem.toggleClass</h1>
+		</div>
+		<div>
+			<h1>elem.containsClass</h1>
+		</div>
+		<div>
+			<h1>elem.addListener</h1>
+		</div>
+		<div>
+			<h1>elem.removeListener</h1>
+		</div>
+		<div>
+			<h1>elem.opacity</h1>
+		</div>
+
+
+		<p class="section">Extentions & Components</p>
+		<div id="loading">
+			<h1>elem.addLoading</h1>
+			<input type="button" value="addLoading"/>
+			<br>
+			Light
+			<input type="radio" name="style" value="light" checked />
+			<br>
+			Dark
+			<input type="radio" name="style" value="dark"/>
+			<br>
+			whole
+			<input type="checkbox" id="whole" />
+			<script type="text/javascript">
+				var l = fw('#loading');
+				var loadingHandler = function(w,s,style,i){
+					if(w[i])
+						w[i].addLoading(s.a,s.s,style);
+					var num = 20, num2 = w.length>1 ? 20 : 200;
+					if(i>=num){
+						w[i-num].removeLoading();
+						if(w.length > 1){
+							if(w[i-num].style.backgroundColor === "rgb(255, 153, 102)"){
+								w[i-num].style.backgroundColor = "#69f";
+							}
+							else
+								w[i-num].style.backgroundColor = "rgb(255, 153, 102)";
+						}
+					}
+					i++;
+					if(i<w.length + num){
+						setTimeout(function(){loadingHandler(w,s,style,i);},num2);
+					}
+				};
+				l.find('input[type="button"]').addListener('click',function(e){
+					var rb = fw('input[name="style"]:checked'),
+						style = rb ? rb.value : "dark",
+						whole = fw('#whole').checked,
+						w = whole ? fw("[.demoContainer]") : fw(".square"),
+						s = whole ? {a:15,s:180} : {a:8,s:10};
+					loadingHandler(w,s,style,0);
+
+				});
+			</script>
+		</div>
+		<div id="banner">
+			<h1>Banner</h1>
+			<div class="bannerHolder"></div>
+
+			<select id="bannerType">
+				<option>Alert</option>
+				<option>Alert with timeout</option>
+				<option>confirm</option>
+				<option>prompt</option>
+			</select>
+			<input type="button" id="bannerButton" value="show banner" />
+			<p class="feedback"></p>
+			<script>
+				var banner = new Banner(fw('.bannerHolder')),
+					bannerType = fw('#bannerType'),
+					bannerButton = fw('#bannerButton');
+
+
+				var bannerInputHandler = function(e){
+					var title = "A banner Title",
+						message = "A banner message, this is an awesome message, I hope you feel much happier for having it.",
+						type = "alert";
+					var callback = function(val){fw('#banner .feedback').innerHTML = type + " banner said: <em>'" + val + "'</em> how do you feel about that?";};
+
+					switch (bannerType.selectedIndex){
+						case 0:
+							type = "alert";
+							banner.alert(title,message,false,callback);
+							break;
+						case 1:
+							type = "alert";
+							banner.alert(title,message,true,callback);
+							break;
+						case 2:
+							type = "confirm";
+							banner.confirm("The Question","Is this an awesome message? Do you feel much happier?",callback);
+							break;
+						default:
+							type = "prompt";
+							banner.prompt("Another Question","On a scale of one to 42, how happy are you?",42,callback);
+							break;
+					}
+				}
+				bannerButton.addListener('click',bannerInputHandler);
+
+			</script>
+		</div>
+		<div id="modal">
+			<h1>Modal</h1>
+			<select id="modalType">
+				<option>Alert</option>
+				<option>confirm</option>
+				<option>prompt</option>
+			</select>
+			<input type="button" id="modalButton" value="show modal" />
+			<p class="feedback"></p>
+			<script>
+				var modalType = fw('#modalType'),
+					modalButton = fw('#modalButton');
+
+
+				var modalInputHandler = function(e){
+					var title = "A modal Title",
+						message = "A modal message, this is an awesome message, I hope you feel much happier for having it.",
+						type = "alert";
+					var callback = function(val){fw('#modal .feedback').innerHTML = type + " modal said: <em>'" + val + "'</em> how do you feel about that?";};
+
+					switch (modalType.selectedIndex){
+						case 0:
+							Alert(title,message,callback);
+							break;
+						case 1:
+							Confirm(title,message,"ok","cancel",callback);
+							break;
+						default:
+							Prompt(title,message,"is that your final answer?","cancel",42,callback);
+							break;
+					}
+				}
+				modalButton.addListener('click',modalInputHandler);
+
+			</script>
+		</div>
+	</div>
+	 <script>
+		 var nav = fw('<select>');
+		 nav.id = "nav";
+		 var divs = fw('#wholeContainer > div,#wholeContainer > p.section').forEach(function(elem){
+			if(elem.id){
+				var opt = nav.createChild('option');
+				opt.value = elem.id;
+				opt.innerHTML = elem.find('h1').innerHTML;
+			}
+			else if(elem.containsClass('section')){
+				var optV = nav.createChild('option');
+				optV.value = "";
+				optV.setAttribute('disabled',"true");
+				optV.innerHTML = elem.innerHTML;
+			}
+		});
+		document.body.insertBefore(nav,container);
+		nav.addListener('change',function(e){
+			fw('.active').removeClass('active');
+			fw('#' + this.value).addClass('active');
+		});
+	/*	// test for fw.js
+		// testing items into the fw function.
+		//creating a div.
+		var first = fw("<div>").addClass('cont');
+		first.id = "first";
+		var child = fw("<span>").addClass('child');
+		//still a dom object and has access to dom methods.
+		child.innerHTML = "first child";
+		child.style.margin = "20px";
+		first.appendChild(child);
+
+		fw('.container').appendChild(first);
+		fw('.container').insertBefore(first,document.getElementById('second'));
+		var inp = fw('.container').createChild("<div>").addClass('fourth').createChild('<input>');
+		var keyhandler = function(e){
+			console.log(fw.key(e));
+		};
+		inp.addListener('keypress',keyhandler);
+		inp.addListener('keydown',keyhandler);
+		inp.addListener('keyup',keyhandler);
+
+
+		// selecting a div
+		var second = fw("#second").addClass('cont');
+		// passing in a element.
+		var third = document.getElementById('third').addClass('cont');
+
+		//returning an array by using find.
+		var lis = third.find('li');
+		var one = third.find('.one');
+		//adding classes - should add all classes.
+		one.addClass('yep').addClass('yepper').addClass('hello');
+		for(var i=0;i<lis.length;i++){
+			var li = lis[i];
+			//toggling classes - one and two should have the "yepper" class removed, all others should see the yepper class.
+			li.toggleClass('yepper');
+			// should add a basic click handler
+			li.addListener('click',handler);
+			if(i===0){
+				li.addListener('mousemove',handler,false,second);
+			}
+		}
+		// one should have the hello class removed.
+		one.removeClass('hello');
+		one.removeListener('click',handler);
+		one.removeListener('mousemove',handler,false);
+
+		first.addListener('click',handler,false);
+		second.addListener('click',handler,true,first);
+
+		var mtype = fw('#type'),
+			mSubtype = fw('#subtype'),
+			mclicker = fw('.alerts .clicker');
+
+		mtype.addListener('change',typeHandler);
+		mclicker.addListener('click',mClickerHandler);
+
+		var alert = new Banner(fw('.alertBanner'));
+		var banner = new Banner(fw('.messages'));
+
+		function handler(e){
+			console.log("handler:", this, e.currentTarget, e.target);
+			console.log("handler:", this.getAttribute('id'), e.currentTarget.getAttribute('id'), e.target.getAttribute('id'));
+			if(e.currentTarget.containsClass('yepper'))
+				console.log('a yepper click');
+		}
+		function typeHandler(e){
+			if(mtype.selectedIndex === 2){
+				mSubtype.options[0].disabled = true;
+
+				if(mSubtype.selectedIndex === 0)
+					mSubtype.selectedIndex = 1;
+			}
+			else{
+				mSubtype.options[0].disabled = false;
+			}
+		}
+		function mClickerHandler(e){
+			var title = "The Title";
+			var message = "The really neat test message that will be displayed";
+			var callback = function(val){console.log(val);};
+			switch(mtype.selectedIndex){
+				case 0:
+					switch (mSubtype.selectedIndex){
+						case 0:
+							alert.alert(title,message,true,callback);
+							break;
+						case 1:
+							alert.alert(title,message,false,callback);
+							break;
+						case 2:
+							alert.confirm(title,message,callback);
+							break;
+						default:
+							alert.prompt(title,message,42,callback);
+							break;
+					}
+					break;
+				case 1:
+					switch (mSubtype.selectedIndex){
+						case 0:
+							banner.alert(title,message,5000,callback);
+							break;
+						case 1:
+							banner.alert(title,message,false,callback);
+							break;
+						case 2:
+							banner.confirm(title,message,callback);
+							break;
+						default:
+							banner.prompt(title,message,42,callback);
+							break;
+					}
+					break;
+				default:
+					switch (mSubtype.selectedIndex){
+						case 0:
+							Alert(title,message,callback);
+							break;
+						case 1:
+							Alert(title,message,callback);
+							break;
+						case 2:
+							Confirm(title,message,"ok","cancel",callback);
+							break;
+						default:
+							Prompt(title,message,"is that your final answer?","cancel",42,callback);
+							break;
+					}
+					break;
+			}
+		}
+
+		fw.ajax({
+			url: 'ajaxDummyPage.html',
+			success: function(obj){ child.innerHTML = obj.val; },
+			failure: function(obj){ console.log(obj);},
+			complete: function(obj){ console.log("complete ajaxDummyPage");}
+		});
+
+		fw.ajax({
+			url: 'jsonDummyPage.js',
+			success: function(obj){ console.log(JSON.parse(obj.val)); },
+			failure: function(obj){ console.log(obj); },
+			complete: function(obj){ console.log("complete jsonDummyPage"); }
+		});
+
+		var obj1 = {
+			t: "t",
+			e: "e",
+			s: {test : "test"},
+			t2: "t"
+		}
+		var obj2 = {
+			t: "T",
+			e: "E",
+			t2: "T"
+		}
+		var obj3 = fw.extend(obj1,obj2);
+		for(var p in obj3){
+			console.log(p + ":" + obj3[p]);
+		}
+		console.log(obj3);
+
+		var subscriber = function(topics,data){
+			console.log(topics, data);
+		}
+		var subscription = fw.subscribe('fw-eventName',subscriber);
+		fw.publish('fw-eventName','eventData');
+		fw.publish('fw-eventName',{hi:"hello",name:"jonny"});
+
+		// give our service time to run
+		setTimeout(function(){fw.unsubscribe(subscription);},1);
+
+		setTimeout(function(){fw.publish('fw-eventName','You shouldn\'t see this');},2);*/
+	</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "fw",
+  "version": "0.0.1",
+  "description": "A small javascript framework for cool stuffs, built with prototype and easily extendable.",
+  "main": "fw.js",
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-stylus": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-watch": "~0.4.4",
+    "stylus": "~0.32.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coltpini/fw.git"
+  },
+  "keywords": [
+    "javascript",
+    "framework",
+    "micro"
+  ],
+  "author": "Colt Pini",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "2d4bd9c09f5d8006fa4230ef6760a89038013503"
+}
