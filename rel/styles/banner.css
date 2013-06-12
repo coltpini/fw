@@ -1,0 +1,10 @@
+.banner{background:transparent;position:fixed;z-index:400;width:250px;right:20px;top:20px;text-align:left;}
+.banner .notice{padding:10px;color:#626262;position:relative;font:11px/15px "Lucida Grande","Lucida Sans",Verdana,Helvetica,Arial,sans-serif;overflow:hidden;max-height:300px;background-color:rgba(241,241,241,0.95);background-image:-webkit-gradient(linear,left top,left bottom,from(rgba(241,241,241,0.95)),to(rgba(254,254,254,0.95)));background-image:-webkit-linear-gradient(top,rgba(241,241,241,0.95),rgba(254,254,254,0.95));background-image:-moz-linear-gradient(top,rgba(241,241,241,0.95),rgba(254,254,254,0.95));background-image:-o-linear-gradient(top,rgba(241,241,241,0.95),rgba(254,254,254,0.95));background-image:linear-gradient(to bottom,rgba(241,241,241,0.95),rgba(254,254,254,0.95));border:1px solid #848484;border-top:1px solid #9e9e9e;border-bottom:1px solid #6e6e6e;margin-bottom:15px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:1px 5px 10px 0 rgba(0,0,0,0.25);-moz-box-shadow:1px 5px 10px 0 rgba(0,0,0,0.25);box-shadow:1px 5px 10px 0 rgba(0,0,0,0.25);-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;}
+.banner .notice.hidden{max-height:0;padding:0;margin:0;border:0}
+.banner .notice h3{margin:0 60px 3px 0;color:#1e1e1e;font-weight:bold;font-size:13px}
+.banner .notice h3 + .message .actions{margin-top:-10px}
+.banner .notice .message p{margin:0 60px 0 0}
+.banner .notice .message .actions{position:absolute;top:50%;right:10px;width:60px;text-align:right;}
+.banner .notice .message .actions .bannerButton{display:inline-block;vertical-align:middle;height:23px;width:23px;overflow:hidden;padding:0;text-indent:50px;cursor:pointer;}
+.banner .notice .message .actions .bannerButton.yes{background:transparent url("img/bannerIcons.png") no-repeat -6px -5px}
+.banner .notice .message .actions .bannerButton.no{background:transparent url("img/bannerIcons.png") no-repeat -56px -5px}

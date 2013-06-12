@@ -1,0 +1,111 @@
+banner-heading = rgb(77, 77, 77);
+banner-text = rgb(98, 98, 98);
+banner-dark = rgb(30,30,30);
+banner-border-top = rgb(158, 158, 158);
+banner-border = rgb(132, 132, 132);
+banner-border-bottom = rgb(110, 110, 110);
+banner-background = rgba(241, 241, 241, 0.95);
+banner-background-bottom = rgba(254, 254, 254, 0.95);
+banner-bannersprites = "img/bannerIcons.png";
+banner-acceptPos = -6px -5px;
+banner-cancelPos = -56px -5px;
+
+.banner {
+    //display: none;
+    background: transparent;
+    position: fixed;
+    z-index: 400;
+    width: 250px;
+    right: 20px;
+    top: 20px;
+    text-align: left;
+
+    .notice {
+        padding: 10px;
+        color: banner-text;
+        position: relative;
+        font: 11px/15px "Lucida Grande","Lucida Sans",Verdana,Helvetica,Arial,sans-serif;
+        overflow: hidden;
+        max-height: 300px;
+
+        background-color: banner-background;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(banner-background), to(banner-background-bottom));
+        background-image: -webkit-linear-gradient(top, banner-background, banner-background-bottom);
+        background-image:    -moz-linear-gradient(top, banner-background, banner-background-bottom);
+        background-image:      -o-linear-gradient(top, banner-background, banner-background-bottom);
+        background-image:         linear-gradient(to bottom, banner-background, banner-background-bottom);
+
+
+
+        border: 1px solid banner-border;
+        border-top: 1px solid banner-border-top;
+        border-bottom: 1px solid banner-border-bottom;
+        margin-bottom: 15px;
+
+        -webkit-border-radius:  5px;
+            -moz-border-radius: 5px;
+                 border-radius: 5px;
+
+        -webkit-box-shadow: 1px 5px 10px 0px rgba(0, 0, 0, 0.25);
+           -moz-box-shadow: 1px 5px 10px 0px rgba(0, 0, 0, 0.25);
+                box-shadow: 1px 5px 10px 0px rgba(0, 0, 0, 0.25);
+
+        -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
+
+        &.hidden {
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+            border: 0px;
+        }
+
+
+        h3 {
+            margin: 0 60px 3px 0;
+            color: banner-dark;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        h3 + .message .actions {
+            margin-top: -10px;
+        }
+        .message {
+
+            p{
+                margin:0 60px 0 0;
+
+            }
+            input {
+                //margin-left: 15px;
+            }
+            .actions {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                width: 60px;
+                text-align: right;
+
+                .bannerButton {
+                    display: inline-block;
+                    vertical-align: middle;
+                    height: 23px;
+                    width: 23px;
+                    overflow: hidden;
+                    padding: 0;
+                    text-indent: 50px;
+                    cursor: pointer;
+
+                    &.yes {
+                        background: transparent url(banner-bannersprites) no-repeat banner-acceptPos;
+                    }
+
+                    &.no {
+                        background: transparent url(banner-bannersprites) no-repeat banner-cancelPos;
+                    }
+
+                }
+            }
+        }
+    }
+}
