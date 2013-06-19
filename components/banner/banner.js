@@ -10,28 +10,44 @@ Banner.prototype.showMessage = function(bannerTitle, bannerMessage) {
 	message = fw('<div>').addClass('message');
 
 	message.appendChild(bannerMessage);
+	this.hideMessage(notice);
 
 	if(bannerTitle !== '')
 		notice.innerHTML = '<h3>' + bannerTitle + '</h3>';
 
 	var trans = fw.styleProp('transition');
 	if(trans.is)
-		notice.style[trans.prop] = "all 100ms ease-out";
+		notice.style[trans.prop] = "all 200ms ease-out";
 
 	notice.appendChild(message);
 	banner.appendChild(notice);
 
+	var _t = this;
+	setTimeout(function(){_t.unhideMessage(notice);},1);
+
 	return notice;
 };
 
+Banner.prototype.unhideMessage = function(elem) {
+	elem.opacity(1);
+	elem.style.right = 0;
+	elem.removeClass('hidden');
+};
 Banner.prototype.hideMessage = function(elem) {
-	elem.opacity = 0;
-	setTimeout(function(){elem.parentNode.removeChild(elem);}, 100);
+	elem.opacity(0);
+	elem.style.right = (-1 * elem.offsetWidth) + "px";
+	elem.addClass('hidden');
+};
+Banner.prototype.removeMessage = function(elem) {
+	this.hideMessage(elem);
+	setTimeout(function(){elem.parentNode.removeChild(elem);}, 500);
 };
 
 Banner.prototype.handler = function(elem,callback,val,t){
 	if(callback){callback(val);}
 	this.hideMessage(elem);
+	var _t = this;
+	setTimeout(function(){ _t.removeMessage(elem);},100);
 	if(t)
 		clearTimeout(t);
 };
@@ -54,10 +70,10 @@ Banner.prototype.alert = function(title, bannerMessage, autohide, callback){
 	var elem = this.showMessage(title, message);
 	var t,th = this;
 	if(typeof(autohide) === "boolean" && autohide === true){
-		t = setTimeout(function(){th.hideMessage(elem);callback();}, 5000);
+		t = setTimeout(function(){th.removeMessage(elem);callback();}, 5000);
 	}
 	else if(typeof(autohide) === "number"){
-		t = setTimeout(function(){th.hideMessage(elem);callback();}, autohide);
+		t = setTimeout(function(){th.removeMessage(elem);callback();}, autohide);
 	}
 
 	ok.addListener('click',function(e){this.handler(elem,callback,true,t);},false,this);

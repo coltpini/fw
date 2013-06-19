@@ -6,9 +6,8 @@ banner-border = rgb(132, 132, 132);
 banner-border-bottom = rgb(110, 110, 110);
 banner-background = rgba(241, 241, 241, 0.95);
 banner-background-bottom = rgba(254, 254, 254, 0.95);
-banner-bannersprites = "img/bannerIcons.png";
-banner-acceptPos = -6px -5px;
-banner-cancelPos = -56px -5px;
+banner-yes = rgb(105, 182, 75);
+banner-no = rgb(204, 99, 99);
 
 .banner {
     //display: none;
@@ -26,7 +25,7 @@ banner-cancelPos = -56px -5px;
         position: relative;
         font: 11px/15px "Lucida Grande","Lucida Sans",Verdana,Helvetica,Arial,sans-serif;
         overflow: hidden;
-        max-height: 300px;
+        max-height: 100px;
 
         background-color: banner-background;
         background-image: -webkit-gradient(linear, left top, left bottom, from(banner-background), to(banner-background-bottom));
@@ -38,8 +37,8 @@ banner-cancelPos = -56px -5px;
 
 
         border: 1px solid banner-border;
-        border-top: 1px solid banner-border-top;
-        border-bottom: 1px solid banner-border-bottom;
+        border-top-color: banner-border-top;
+        border-bottom-color: banner-border-bottom;
         margin-bottom: 15px;
 
         -webkit-border-radius:  5px;
@@ -55,10 +54,9 @@ banner-cancelPos = -56px -5px;
         &.hidden {
             max-height: 0;
             padding: 0;
-            margin: 0;
-            border: 0px;
+            margin-bottom: 0;
+            border-width: 0px;
         }
-
 
         h3 {
             margin: 0 60px 3px 0;
@@ -93,17 +91,111 @@ banner-cancelPos = -56px -5px;
                     width: 23px;
                     overflow: hidden;
                     padding: 0;
-                    text-indent: 50px;
+                    text-indent: 100px;
                     cursor: pointer;
+                    margin: 2px;
+                    -webkit-transition: background-color 200ms ease-out;
+                       -moz-transition: background-color 200ms ease-out;
+                        -ms-transition: background-color 200ms ease-out;
+                         -o-transition: background-color 200ms ease-out;
+                            transition: background-color 200ms ease-out;
 
                     &.yes {
-                        background: transparent url(banner-bannersprites) no-repeat banner-acceptPos;
+                        background: banner-yes;
+
+                        -webkit-border-radius: 50%;
+                                border-radius: 50%;
+
+                        -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
+
+                        &:hover {
+                            background: darken(banner-yes, 12%);
+                        }
+
+                        &:before {
+                            content: "";
+                            height: 8px;
+                            width: 3px;
+                            background-color: #fff;
+                            display: block;
+                            margin: 10px 6px;
+
+                            -webkit-transform: rotate(-45deg);
+                               -moz-transform: rotate(-45deg);
+                                -ms-transform: rotate(-45deg);
+                                 -o-transform: rotate(-45deg);
+                                    transform: rotate(-45deg);
+
+
+                        }
+
+                        &:after {
+                            content: "";
+                            height: 14px;
+                            width: 3px;
+                            background-color: #fff;
+                            display: block;
+                            margin: -38px 12px;
+
+                            -webkit-transform: rotate(45deg);
+                               -moz-transform: rotate(45deg);
+                                -ms-transform: rotate(45deg);
+                                 -o-transform: rotate(45deg);
+                                    transform: rotate(45deg);
+
+
+                        }
+
                     }
 
                     &.no {
-                        background: transparent url(banner-bannersprites) no-repeat banner-cancelPos;
-                    }
+                        background: banner-no;
 
+
+                          -webkit-border-radius: 20%;
+                                  border-radius: 20%;
+
+                          -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
+
+                        &:hover {
+                            background: darken(banner-no, 8%);
+                        }
+
+                        &:before {
+                            content: "";
+                            height: 16px;
+                            width: 3px;
+                            background-color: #fff;
+                            display: block;
+                            margin: 4px 10px;
+
+                            -webkit-transform: rotate(-45deg);
+                               -moz-transform: rotate(-45deg);
+                                -ms-transform: rotate(-45deg);
+                                 -o-transform: rotate(-45deg);
+                                    transform: rotate(-45deg);
+
+
+                        }
+
+                        &:after {
+                            content: "";
+                            height: 16px;
+                            width: 3px;
+                            background-color: #fff;
+                            display: block;
+                            margin: -35px 10px;
+
+                            -webkit-transform: rotate(45deg);
+                               -moz-transform: rotate(45deg);
+                                -ms-transform: rotate(45deg);
+                                 -o-transform: rotate(45deg);
+                                    transform: rotate(45deg);
+
+
+                        }
+
+                    }
                 }
             }
         }

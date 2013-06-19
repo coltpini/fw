@@ -147,6 +147,11 @@ fw.key = function(e){
 	return {code: code, char: character};
 };
 
+fw.button = function (e) {
+    var button = event.buttons || event.which || event.button;
+    return button;
+};
+
 fw.pointerOffset = function(e){
 	var elem = e.currentTarget,
 		left = 0,
