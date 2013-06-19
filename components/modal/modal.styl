@@ -5,7 +5,15 @@ modal-background = #fff;
 modal-title-color = #eee;
 modal-text = #333;
 
-oButton(ts, t, s, b, gT, gM, gB,){
+oButton(c){
+	ts = darken(c,30%);
+	t = lighten(c,3%);
+	s = c;
+	b = darken(c,15%);
+	gT = lighten(c,5%);
+	gM = c;
+	gB = darken(c,10%);
+
 	text-shadow: ts 0 -1px 0;
 
 	border-top: 1px solid t;
@@ -133,10 +141,10 @@ oButton(ts, t, s, b, gT, gM, gB,){
 	}
 
 	.yes {
-		oButton(#303E53, #929B5A, #808F43, #586524, #C7D397, #ABBA6D, #6C7A2F);
+		oButton(rgb(105, 182, 75));
 	}
 	.no {
-		oButton(#303E53, #a35353, #722f2f, #711111, #c06565, #a15252, #884242);
+		oButton(rgb(204, 99, 99));
 	}
 }
 .blackout {
