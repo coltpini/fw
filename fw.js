@@ -288,17 +288,28 @@ fw.ajax = function(options){
 	};
 };
 fw.jsonp = function(options){
-	var o = {
-		url: options.url,
-		success: options.success
-	};
+	var empty = function(){},
+		o = {
+			url: options.url,
+			success: options.success || empty,
+			failure: options.failure || empty,
+			complete: options.complete || empty,
+			timeout: options.timeout || 3000
+		};
 	var key = this.randomString(10);
+		et = setTimeout(function(){
+				// if the window[key] isn't called in o.timeout then call failure manually with an error message.
+				o.failure({err: "the script was not called, recieved a 500 error, or the script had an error"});
+				this[key] = undefined;
+			},o.timeout);
 	window[key] = function(json){
 		o.success(json);
 		this[key] = undefined;
+		if(et)
+			clearTimeout(et);
 	};
-
 	fw.loadScript(o.url + '?callback=' + key);
+	o.complete();
 };
 
 fw.randomString = function(length, isAlphaNumeric){
