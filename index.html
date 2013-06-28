@@ -443,7 +443,7 @@
 
 			</script>
 		</div>
-		<div id="modal">
+		<div id="modalDemo">
 			<h1>Modal</h1>
 			<select id="modalType">
 				<option>Alert</option>
@@ -461,7 +461,7 @@
 					var title = "A modal Title",
 						message = "A modal message, this is an awesome message, I hope you feel much happier for having it.",
 						type = "alert";
-					var callback = function(val){fw('#modal .feedback').innerHTML = type + " modal said: <em>'" + val + "'</em> how do you feel about that?";};
+					var callback = function(val){fw('#modalDemo .feedback').innerHTML = type + " modal said: <em>'" + val + "'</em> how do you feel about that?";};
 
 					switch (modalType.selectedIndex){
 						case 0:
