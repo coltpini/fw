@@ -289,7 +289,8 @@ fw.jsonp = function(options){
 	var empty = function(){},
 		o = {
 			url: options.url,
-			success: options.success || empty
+			success: options.success || empty,
+			cb: options.callback || "callback"
 		},
 		key = this.randomString(10);
 
@@ -297,7 +298,7 @@ fw.jsonp = function(options){
 		o.success(json);
 		this[key] = undefined;
 	};
-	fw.loadScript(o.url + '?callback=' + key);
+	fw.loadScript(o.url + '?' + cb + '=' + key);
 };
 
 fw.randomString = function(length, isAlphaNumeric){
