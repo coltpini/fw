@@ -292,13 +292,14 @@ fw.jsonp = function(options){
 			success: options.success || empty,
 			cb: options.callback || "callback"
 		},
-		key = this.randomString(10);
+		key = this.randomString(10),
+		del = o.url.indexOf('?') > -1 ? "&" : '?';
 
 	window[key] = function(json){
 		o.success(json);
 		this[key] = undefined;
 	};
-	fw.loadScript(o.url + '?' + cb + '=' + key);
+	fw.loadScript(o.url + del + o.cb + '=' + key);
 };
 
 fw.randomString = function(length, isAlphaNumeric){
