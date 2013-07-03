@@ -3,6 +3,7 @@
 <head>
 	<title>Test suite for fw.js</title>
 	<script src="rel/js/fw-min.js"></script>
+<!--	<script src="fw.js"></script>-->
 	<script src="rel/js/banner-min.js"></script>
 	<script src="rel/js/modal-min.js"></script>
 	<script src="rel/js/fwLoading-min.js"></script>
@@ -180,26 +181,27 @@ k.find('input').addListener('keypress',keyHandler);
 			<p class="feedback"></p>
 <script type="text/javascript">
 var pointerHandler = function(e){
-    fw('#wholeContainer').style.display = "none";
+//    var wc = fw('#wholeContainer');
+//    wc.style.display = "none";
     var pp = fw.pointerPosition(e),
         po = fw.pointerOffset(e);
     fw('#pointer .feedback').innerHTML = "pointerPosition = {x: " + pp.x + ", y: " + pp.y + "}; pointerOffset = {x: " + po.x + ", y: " + po.y + "}";
-    fw('#wholeContainer').style.display = "block";
+//    wc.style.display = "block";
 }
 
 var hoverHandler = function(e){
-    //fw.stopCancel(e);
-    fw('#wholeContainer').style.display = "none";
+    fw.stopCancel(e);
+//    var wc = fw('#wholeContainer');
+//    wc.style.display = "none";
     var pp = fw.pointerPosition(e);
     var oe = document.elementFromPoint(pp.x, pp.y);
-
     if(fw.button(e) !== 1){
         fw('.square').forEach(function(elem){
             elem.removeClass('hovered');
         });
     }
     oe.addClass('hovered');
-    fw('#wholeContainer').style.display = "block";
+//    wc.style.display = "block";
 };
 
 fw('.square').forEach(function(elem){
@@ -210,11 +212,25 @@ fw("body").addListener('mousemove',hoverHandler);
 
 </script>
 		</div>
-        <div nid="button">
+        <div id="button">
 			<h1>fw.button</h1>
 			<p class="feedback"></p>
 			<script type="text/javascript">
-
+                var buttonHandler = function(e){
+                    if(fw('#demoContainer').containsClass('button')){
+                        var b = fw.button(e);
+                        fw('#button .feedback').innerHTML = b;
+                        this.style.background = 'rgb(' + (105 - (b*10)) + ','+ (155 + (b*20)) + ','+ (185 + (b*20)) + ')';
+                    }
+                };
+                var buttonMouseDownHandler = function(e){
+                    if(fw('#demoContainer').containsClass('button'))
+                        fw.stopCancel(e);
+                };
+                fw('.square').forEach(function(elem){
+                    elem.addListener('mousemove',buttonHandler);
+                    elem.addListener('contextmenu',buttonMouseDownHandler);
+                });
 			</script>
 		</div>
 		<div id="mouseWheel">
@@ -234,13 +250,7 @@ var wheelHandler = function(e){
     }
 };
 
-var scrollHandler = function(e){
-    var w = fw.mouseWheel(e);
-    console.log('scrolled: ' + w);
-};
-
 window.addListener('mousewheel',wheelHandler);
-window.addListener('scroll',scrollHandler);
 </script>
 		</div>
 		<p class="section">Async stuffs</p>
@@ -286,8 +296,33 @@ function jsonpInit(){
 };
 </script>
 		</div>
-		<div>
+		<div id="randomString">
 			<h1>fw.randomString</h1>
+			<button id="randomize">randomize</button>
+<script>
+    function randomStringInit(){
+        fw('.randomString .square').forEach(function(elem){
+            // first overload, length of random string, second is to include numbers.
+            var s = fw.randomString(6,true),
+                arr = ['g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+            arr.forEach(function(d){
+                var reg = new RegExp(d,'gi');
+                s = s.replace(reg,Math.round(Math.random() * 9));
+            });
+
+            elem.style.background = "#" + s;
+            elem.innerHTML = "#" + s;
+        });
+    }
+    function randomStringExit(){
+        fw('.square').forEach(function(elem){
+            elem.style.background = "";
+            elem.innerHTML = "";
+        });
+    }
+    fw('#randomize').addListener('click',randomStringInit);
+
+</script>
 		</div>
 		<p class="section">Utils</p>
 		<div>
@@ -371,7 +406,7 @@ function cssStyleInit(){
 
 
 		<p class="section">Extentions & Components</p>
-		<div id="loading">
+		<div id="loadingDemo">
 			<h1>elem.addLoading</h1>
 			<input type="button" value="addLoading"/>
 			<br>
@@ -384,7 +419,7 @@ function cssStyleInit(){
 			whole
 			<input type="checkbox" id="whole" />
 <script type="text/javascript">
-var l = fw('#loading');
+var l = fw('#loadingDemo');
 var loadingHandler = function(w,s,style,i){
     if(w[i])
         w[i].addLoading(s.a,s.s,style);
@@ -471,32 +506,32 @@ bannerButton.addListener('click',bannerInputHandler);
 			</select>
 			<input type="button" id="modalButton" value="show modal" />
 			<p class="feedback"></p>
-			<script>
-				var modalType = fw('#modalType'),
-					modalButton = fw('#modalButton');
+<script>
+    var modalType = fw('#modalType'),
+        modalButton = fw('#modalButton');
 
 
-				var modalInputHandler = function(e){
-					var title = "A modal Title",
-						message = "A modal message, this is an awesome message, I hope you feel much happier for having it.",
-						type = "alert";
-					var callback = function(val){fw('#modalDemo .feedback').innerHTML = type + " modal said: <em>'" + val + "'</em> how do you feel about that?";};
+    var modalInputHandler = function(e){
+        var title = "A modal Title",
+            message = "A modal message, this is an awesome message, I hope you feel much happier for having it.",
+            type = "alert";
+        var callback = function(val){fw('#modalDemo .feedback').innerHTML = type + " modal said: <em>'" + val + "'</em> how do you feel about that?";};
 
-					switch (modalType.selectedIndex){
-						case 0:
-							Alert(title,message,callback);
-							break;
-						case 1:
-							Confirm(title,message,"ok","cancel",callback);
-							break;
-						default:
-							Prompt(title,message,"is that your final answer?","cancel",42,callback);
-							break;
-					}
-				}
-				modalButton.addListener('click',modalInputHandler);
+        switch (modalType.selectedIndex){
+            case 0:
+                Alert(title,message,callback);
+                break;
+            case 1:
+                Confirm(title,message,"ok","cancel",callback);
+                break;
+            default:
+                Prompt(title,message,"is that your final answer?","cancel",42,callback);
+                break;
+        }
+    }
+    modalButton.addListener('click',modalInputHandler);
 
-			</script>
+</script>
 		</div>
 	</div>
 	 <script>
@@ -542,9 +577,12 @@ bannerButton.addListener('click',bannerInputHandler);
             if(!e){
                 t = {value: "fw"};
             }
-            fw('#wholeContainer > div.active').removeClass('active');
+            var former = fw('#wholeContainer > div.active').removeClass('active');
+
 			var tb = fw('#' + t.value).addClass('active');
 			dc.setAttribute('class',t.value);
+			if(window[former.getAttribute('id') + "Exit"])
+			    window[former.getAttribute('id') + "Exit"]();
 			if(window[t.value + "Init"])
 			    window[t.value + "Init"]();
 
