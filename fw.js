@@ -242,7 +242,6 @@ fw.ajax = function(options){
 		};
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = onStatusChange;
-	// how do I apply qs params? through data?
 	request.open(o.type, o.url, true);
 	request.send(o.data);
 	function onStatusChange(){
