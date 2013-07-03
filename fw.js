@@ -144,7 +144,7 @@ fw.key = function(e){
 };
 
 fw.button = function (e) {
-    var button = event.buttons || event.which || event.button;
+    var button = typeof(e.buttons) !== "undefined" ? e.buttons : typeof(e.which) !== "undefined" ? e.which : e.button;
     return button;
 };
 
@@ -214,7 +214,7 @@ fw.pointerPosition = function(e,top,left,fixed){
 };
 
 fw.mouseWheel = function(e){
-	var deltaX = 0;
+	var deltaX = 0, delta;
 	if(e.wheelDelta) delta = e.wheelDelta/120;
 	if(e.detail) delta = -e.detail/3;
     var deltaY = delta;
@@ -224,6 +224,8 @@ fw.mouseWheel = function(e){
     }
     if(e.wheelDeltaY !== undefined) deltaY = e.wheelDeltaY/120;
     if(e.wheelDeltaX !== undefined) deltaX = -1*e.wheelDeltaX/120;
+    if(e.deltaY !== undefined) deltaY = e.deltaY/30;
+    if(e.deltaX !== undefined) deltaX = -1*e.deltaX/30;
     return {x:deltaX,y:deltaY};
 };
 
@@ -546,6 +548,10 @@ var FW = function(fwObj){
 	//TODO: add a selector so the event can be attached to a parent?
 	fwObj.addListener = window.addListener = function(eventName,handler,propagation,obj){
 		var p = typeof(propagation)!=="undefined" ? propagation : false;
+		if(eventName === "wheel" || eventName === "mousewheel"){
+		    eventName = "onwheel" in window ? "wheel" : "mousewheel";
+		}
+
 		//this may be better attached to the element.
 		if(!handler.p)
 			handler.p = [];
