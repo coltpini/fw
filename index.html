@@ -2,8 +2,8 @@
 <html>
 <head>
 	<title>Test suite for fw.js</title>
-	<script src="rel/js/fw-min.js"></script>
-<!--	<script src="fw.js"></script>-->
+<!--	<script src="rel/js/fw-min.js"></script>-->
+	<script src="fw.js"></script>
 	<script src="rel/js/banner-min.js"></script>
 	<script src="rel/js/modal-min.js"></script>
 	<script src="rel/js/fwLoading-min.js"></script>
@@ -33,6 +33,7 @@
 	<div id="wholeContainer">
 		<div id="fw" class="active">
 			<h1>fw()</h1>
+			<h2>fw</h2>
 			<p>information</p>
 			<select class="findSelector">
 				<option></option>
@@ -73,8 +74,8 @@ fw('#fw .findSelector').addListener('change',function(){
 			<h1>Publish Subscribe pattern</h1>
 			<h2>fw.publish</h2>
 			<input type="button" id="publish" value="publish" />
-
-			<h2>fw.subscribe / fw.unsubscribe</h2>
+			<h2>fw.subscribe</h2>
+			<h2>fw.unsubscribe</h2>
 			<input type="button" id="subscribe" value="unsubscribe"/>
 
 			<p class="feedback"></p>
@@ -117,6 +118,9 @@ ps.find('#subscribe').addListener('click',function(e){
 
 		<div id="stopCancel">
 			<h1>fw.stop / fw.cancel / fw.stopCancel</h1>
+			<h2>fw.stop</h2>
+			<h2>fw.cancel</h2>
+			<h2>fw.stopCancel</h2>
 			<style type="text/css">
 				#stopCancel .eventer{
 					display: inline-block;
@@ -150,6 +154,7 @@ sc.find('.eventer').forEach(function(elem){
 		</div>
 		<div id="key">
 			<h1>fw.key</h1>
+			<h2>fw.key</h2>
 			<input />
 			<p class="feedback"></p>
 <script type="text/javascript">
@@ -178,6 +183,7 @@ k.find('input').addListener('keypress',keyHandler);
 		</div>
 		<div id="pointer">
 			<h1>fw.pointerOffset / fw.pointerPosition</h1>
+			<h2>fw.pointerOffset</h2><h2>fw.pointerPosition</h2>
 			<p class="feedback"></p>
 <script type="text/javascript">
 var pointerHandler = function(e){
@@ -214,27 +220,29 @@ fw("body").addListener('mousemove',hoverHandler);
 		</div>
         <div id="button">
 			<h1>fw.button</h1>
+			<h2>fw.button</h2>
 			<p class="feedback"></p>
-			<script type="text/javascript">
-                var buttonHandler = function(e){
-                    if(fw('#demoContainer').containsClass('button')){
-                        var b = fw.button(e);
-                        fw('#button .feedback').innerHTML = b;
-                        this.style.background = 'rgb(' + (105 - (b*10)) + ','+ (155 + (b*20)) + ','+ (185 + (b*20)) + ')';
-                    }
-                };
-                var buttonMouseDownHandler = function(e){
-                    if(fw('#demoContainer').containsClass('button'))
-                        fw.stopCancel(e);
-                };
-                fw('.square').forEach(function(elem){
-                    elem.addListener('mousemove',buttonHandler);
-                    elem.addListener('contextmenu',buttonMouseDownHandler);
-                });
-			</script>
+<script type="text/javascript">
+var buttonHandler = function(e){
+    if(fw('#demoContainer').containsClass('button')){
+        var b = fw.button(e);
+        fw('#button .feedback').innerHTML = b;
+        this.style.background = 'rgb(' + (105 - (b*10)) + ','+ (155 + (b*20)) + ','+ (185 + (b*20)) + ')';
+    }
+};
+var buttonMouseDownHandler = function(e){
+    if(fw('#demoContainer').containsClass('button'))
+        fw.stopCancel(e);
+};
+fw('.square').forEach(function(elem){
+    elem.addListener('mousemove',buttonHandler);
+    elem.addListener('contextmenu',buttonMouseDownHandler);
+});
+</script>
 		</div>
 		<div id="mouseWheel">
 			<h1>fw.mouseWheel</h1>
+			<h2>fw.mouseWheel</h2>
 			<p class="feedback"></p>
 <script type="text/javascript">
 var wheelHandler = function(e){
@@ -256,12 +264,17 @@ window.addListener('mousewheel',wheelHandler);
 		<p class="section">Async stuffs</p>
 		<div>
 			<h1>fw.loadScript</h1>
+			<h2>fw.loadScript</h2>
 		</div>
 		<div>
 			<h1>fw.ajax</h1>
+			<h2>fw.ajax</h2>
 		</div>
 		<div id="jsonp">
 			<h1>fw.jsonp</h1>
+			<h2>fw.jsonp</h2>
+			<h2>fw.randomString</h2>
+			<h2>fw.loadScript</h2>
 			<input type="text" id="flickrTerm" value="fly fisherman" />
 <script>
 var punchOut = 0;
@@ -298,6 +311,7 @@ function jsonpInit(){
 		</div>
 		<div id="randomString">
 			<h1>fw.randomString</h1>
+			<h2>fw.randomString</h2>
 			<button id="randomize">randomize</button>
 <script>
     function randomStringInit(){
@@ -327,19 +341,24 @@ function jsonpInit(){
 		<p class="section">Utils</p>
 		<div>
 			<h1>fw.extend</h1>
+			<h2>fw.extend</h2>
 		</div>
 		<div>
 			<h1>fw.qs</h1>
+			<h2>fw.qs</h2>
 		</div>
 		<div>
 			<h1>fw.proxy</h1>
+			<h2>fw.proxy</h2>
 		</div>
 		<div>
 			<h1>fw.cookie</h1>
+			<h2>fw.proxy</h2>
 		</div>
 		<p class="section">css stuffs</p>
 		<div id="cssStyle">
 			<h1>fw.cssStyle</h1>
+			<h2>fw.cssStyle</h2>
 			<button>red</button>
 			<button>green</button>
 			<button>yellow</button>
@@ -365,10 +384,12 @@ function cssStyleInit(){
 		</div>
 		<div>
 			<h1>fw.styleProp</h1>
+			<h2>fw.styleProp</h2>
 		</div>
 		<!-- fw.checkCssPropSupport -->
 		<div>
 			<h1>fw.extendElement</h1>
+			<h2>fw.extendElement</h2>
 			<!-- fw.extendObject -->
 		</div>
 
@@ -378,36 +399,46 @@ function cssStyleInit(){
 		</div>
 		<div>
 			<h1>elem.createChild</h1>
+			<h2>elem.createChild</h2>
 		</div>
 		<div>
 			<h1>elem.find</h1>
+			<h2>elem.find</h2>
 		</div>
 		<div>
 			<h1>elem.addClass</h1>
+			<h2>elem.addClass</h2>
 		</div>
 		<div>
 			<h1>elem.removeClass</h1>
+			<h2>elem.removeClass</h2>
 		</div>
 		<div>
 			<h1>elem.toggleClass</h1>
+			<h2>elem.toggleClass</h2>
 		</div>
 		<div>
 			<h1>elem.containsClass</h1>
+			<h2>elem.containsClass</h2>
 		</div>
 		<div>
 			<h1>elem.addListener</h1>
+			<h2>elem.addListener</h2>
 		</div>
 		<div>
 			<h1>elem.removeListener</h1>
+			<h2>elem.removeListener</h2>
 		</div>
 		<div>
 			<h1>elem.opacity</h1>
+			<h2>elem.opacity</h2>
 		</div>
 
 
 		<p class="section">Extentions & Components</p>
 		<div id="loadingDemo">
 			<h1>elem.addLoading</h1>
+			<h2>elem.addLoading</h2>
 			<input type="button" value="addLoading"/>
 			<br>
 			Light
@@ -451,7 +482,8 @@ l.find('input[type="button"]').addListener('click',function(e){
 </script>
 		</div>
 		<div id="banner">
-			<h1>Banner</h1>
+			<h1>banner</h1>
+			<h2>banner</h2>
 			<div class="bannerHolder"></div>
 
 			<select id="bannerType">
@@ -499,8 +531,11 @@ bannerButton.addListener('click',bannerInputHandler);
 		</div>
 		<div id="modalDemo">
 			<h1>Modal</h1>
+			<h2>Alert</h2>
+			<h2>Confirm</h2>
+			<h2>Prompt</h2>
 			<select id="modalType">
-				<option>Alert</option>
+				<option>alert</option>
 				<option>confirm</option>
 				<option>prompt</option>
 			</select>
@@ -589,15 +624,31 @@ bannerButton.addListener('click',bannerInputHandler);
             // get the block of script and spit it out for the example
             var script = tb.find('script').innerHTML,
                 se = tb.find('.scriptExample code');
+                tb.find('[h2]').forEach(function(elem){
+                    var fnSs = elem.innerHTML,
+                        fnS = fnSs.substring(fnSs.indexOf('.')+1),
+                        f = fw[fnS];
+
+                    if(fnS === 'fw'){
+                        script += "\n\/\/ ------------- From the fw Source ------------- \n";
+                        script += fw.toString();
+                    }
+                    else{
+                        script += "\n\/\/ ------------- From the fw Source: " + fnSs + " ------------- \n";
+                        script += f.toString();
+                    }
+                });
+
+
+
             if(typeof(se) === 'undefined'){
                 tb.createChild('div').addClass('scriptToggler').addClass('active').addListener('click',togglerHandler).innerHTML = "Script";
-                se = tb.createChild('pre').addClass('scriptExample').addClass('active');
-                se = se.createChild('code');
+                se = tb.createChild('pre').addClass('scriptExample').addClass('active').createChild('code');
             }
-            Rainbow.color(script,'javascript', function(code){
-                se.innerHTML = code;
-            });
 
+            Rainbow.color(script,'javascript', function(code,err){
+                tb.find('code').innerHTML = code;
+            });
         };
 
         nav.addListener('change',changeHandler);
