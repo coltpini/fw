@@ -4,6 +4,7 @@ body,html {
     overflow: hidden;
     color: white;
 }
+
 #wholeContainer{
     width: 150px;
     height: 100%;
@@ -33,7 +34,7 @@ body,html {
     height: 10%;
     width: 10%;
     display: inline-block;
-    background: #69f;
+    background: #333;
     padding: 20px 0 0 0;
     text-shadow: 0 0 4px rgba(0,0,0,0.3);
     text-align:center;
@@ -42,6 +43,18 @@ body,html {
        -moz-transition: all 0.3s ease-out;
          -o-transition: all 0.3s ease-out;
             transition: all 0.3s ease-out;
+
+}
+.flipped .square {
+    background: #f9f;
+  -webkit-perspective: 300px;
+     -moz-perspective: 300px;
+      -ms-perspective: 300px;
+          perspective: 300px;
+  -webkit-transform: rotateY(180deg) rotateX(180deg);  -webkit-transform-style: preserve-3d;
+     -moz-transform: rotateY(180deg) rotateX(180deg);     -moz-transform-style: preserve-3d;
+      -ms-transform: rotateY(180deg) rotateX(180deg);      -ms-transform-style: preserve-3d;
+          transform: rotateY(180deg) rotateX(180deg);          transform-style: preserve-3d;
 
 }
 #wholeContainer > div {
