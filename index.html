@@ -4,9 +4,9 @@
 	<title>Test suite for fw.js</title>
 <!--	<script src="rel/js/fw-min.js"></script>-->
 	<script src="fw.js"></script>
-	<script src="rel/js/banner-min.js"></script>
-	<script src="rel/js/modal-min.js"></script>
-	<script src="rel/js/fwLoading-min.js"></script>
+	<script src="components/banner/banner.js"></script>
+	<script src="components/modal/modal.js"></script>
+	<script src="plugins/loading/fwLoading.js"></script>
 	<script src="codeHighlight/rainbow.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="reset.css" />
@@ -48,20 +48,14 @@
 <script>
 fw('#fw .findSelector').addListener('change',function(){
     var feedback = fw('#fw .feedback');
-    fw('.square').forEach(function(elem){elem.style.background = "#69f";})
+    fw('.square').forEach(function(elem){elem.style.background = "";})
     feedback.innerHTML = "";
-    if(this.value === "new"){
-        var newli = container.createChild('<li>').addClass('square');
-        newli.opacity(0);
-        setTimeout(function(){newli.opacity(1);},1);
-        feedback.innerHTML = "created new li";
-    }
-    else if(this.value !== ""){
+    if(this.value !== ""){
         var t = container.find(this.value);
         if(t.length)
-            t.forEach(function(elem){elem.style.background = "#f96";});
+            t.forEach(function(elem){elem.style.background = "#69f";});
         else
-            t.style.background = "#f96";
+            t.style.background = "#69f";
 
         var num = t.length ? t.length : 1;
         feedback.innerHTML = "returned " + num + " item" + (num>1?"s":"") + " as an " + (t.length?"Array":"Element");
@@ -262,13 +256,41 @@ window.addListener('mousewheel',wheelHandler);
 </script>
 		</div>
 		<p class="section">Async stuffs</p>
-		<div>
+		<div id="loadScript">
 			<h1>fw.loadScript</h1>
 			<h2>fw.loadScript</h2>
+<script>
+function loadScriptInit(){
+    fw.loadScript('examples/loadScriptExample.js');
+}
+function loadScriptExit(){
+    fw('body').removeClass('flipped');
+}
+
+// ----------------- Contents of loadScriptExamplejs -----------------------
+/*
+
+
+if(fw('#loadScript button') === undefined){
+    fw('#loadScript').createChild('button').innerHTML = 'flip it';
+
+    fw('#loadScript button').addListener('click', function(){
+        fw('body').toggleClass('flipped');
+    });
+}
+
+fw('body').addClass('flipped');
+
+
+*/
+</script>
 		</div>
-		<div>
+		<div did="ajax">
 			<h1>fw.ajax</h1>
 			<h2>fw.ajax</h2>
+			<script>
+
+			</script>
 		</div>
 		<div id="jsonp">
 			<h1>fw.jsonp</h1>
@@ -385,6 +407,7 @@ function cssStyleInit(){
 		<div>
 			<h1>fw.styleProp</h1>
 			<h2>fw.styleProp</h2>
+
 		</div>
 		<!-- fw.checkCssPropSupport -->
 		<div>
@@ -395,7 +418,7 @@ function cssStyleInit(){
 
 		<p class="section">element functions</p>
 		<div>
-			<h1>elem.isFW = true;</h1>
+			<h1>elem.isFW</h1>
 		</div>
 		<div>
 			<h1>elem.createChild</h1>
@@ -458,11 +481,11 @@ var loadingHandler = function(w,s,style,i){
     if(i>=num){
         w[i-num].removeLoading();
         if(w.length > 1){
-            if(w[i-num].style.backgroundColor === "rgb(255, 153, 102)"){
-                w[i-num].style.backgroundColor = "#69f";
+            if(w[i-num].style.backgroundColor === "rgb(100, 152, 255)"){
+                w[i-num].style.backgroundColor = "";
             }
             else
-                w[i-num].style.backgroundColor = "rgb(255, 153, 102)";
+                w[i-num].style.backgroundColor = "rgb(100, 152, 255)";
         }
     }
     i++;
@@ -482,8 +505,10 @@ l.find('input[type="button"]').addListener('click',function(e){
 </script>
 		</div>
 		<div id="banner">
-			<h1>banner</h1>
-			<h2>banner</h2>
+			<h1>Banner</h1>
+			<h2>banner.alert</h2>
+			<h2>banner.prompt</h2>
+			<h2>banner.confirm</h2>
 			<div class="bannerHolder"></div>
 
 			<select id="bannerType">
@@ -625,16 +650,10 @@ bannerButton.addListener('click',bannerInputHandler);
             var script = tb.find('script').innerHTML,
                 se = tb.find('.scriptExample code');
                 tb.find('[h2]').forEach(function(elem){
-                    var fnSs = elem.innerHTML,
-                        fnS = fnSs.substring(fnSs.indexOf('.')+1),
-                        f = fw[fnS];
-
-                    if(fnS === 'fw'){
-                        script += "\n\/\/ ------------- From the fw Source ------------- \n";
-                        script += fw.toString();
-                    }
-                    else{
-                        script += "\n\/\/ ------------- From the fw Source: " + fnSs + " ------------- \n";
+                    var fnS = elem.innerHTML,
+                        f = eval(fnS);
+                    if(typeof(f) === "function"){
+                        script += "\n\/\/ ------------- From the fw Source: " + fnS + " ------------- \n";
                         script += f.toString();
                     }
                 });
