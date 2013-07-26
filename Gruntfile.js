@@ -22,7 +22,8 @@ module.exports = function(grunt){
           'rel/styles/banner.css' : ['components/banner/banner.styl' ],
           'rel/styles/contextMenu.css' : ['components/contextMenu/contextMenu.styl','components/contextMenu/menus.styl'],
           'rel/styles/modal.css' : ['components/modal/modal.styl'],
-          'rel/styles/loading.css' : ['plugins/loading/loading.styl']
+          'rel/styles/loading.css' : ['plugins/loading/loading.styl'],
+          'rel/styles/tippet.css' : ['components/tippet/tippet.styl']
         }
       }
     },
@@ -40,6 +41,7 @@ module.exports = function(grunt){
           'rel/js/banner-min.js' : ['components/banner/banner.js' ],
           'rel/js/contextMenu-min.js' : ['components/contextMenu/contextMenu-min.js','components/contextMenu/menus.js'],
           'rel/js/modal-min.js' : ['components/modal/modal.js'],
+          'rel/js/tippet-min.js' : ['components/tippet/tippet.js'],
           'rel/js/fwLoading-min.js' : ['plugins/loading/fwLoading.js'],
           'rel/js/fwRotateIE8-min.js' : ['plugins/rotateIE8/fwRotateIE8.js'],
           'rel/js/fwXmlAndJson-min.js' : ['plugins/xmlAndJson/fwXmlAndJson.js']
