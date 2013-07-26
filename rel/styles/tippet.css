@@ -1,0 +1,18 @@
+.tippet{max-width:400px;min-width:200px}
+.tippet.wide{max-width:700px;min-width:500px}
+.tippet{text-shadow:none;text-align:left;position:absolute;z-index:201;margin:12px;border:2px solid #58e;background-color:#fff;font:12px/14px 'Helvetica Neue',helvetica,sans-serif;-webkit-border-radius:4px;border-radius:4px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;}
+.tippet h3{padding:5px;margin:0 0 2px 0;font:normal 10px/9px "Lucida Grande","Lucida Sans","Lucida Sans Regular","Lucida Sans Unicode",Verdana,Helvetica,Arial,sans-serif;color:#eee;text-shadow:0 1px 1px #111;background-color:#58e;background-image:-webkit-gradient(linear,left top,left bottom,from(#7af),to(#58e));background-image:-webkit-linear-gradient(top,#7af,#58e 90%);background-image:-moz-linear-gradient(top,#7af,#58e 90%);background-image:-ms-linear-gradient(top,#7af,#58e 90%);background-image:-o-linear-gradient(top,#7af,#58e 90%);background-image:linear-gradient(top,#7af,#58e 90%);-webkit-border-top-right-radius:2px;border-top-right-radius:2px;-webkit-border-top-left-radius:2px;border-top-left-radius:2px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box}
+.tippet .tippetContent{padding:5px;color:#333;font:12px/16px "Lucida Grande","Lucida Sans","Lucida Sans Regular","Trebuchet MS",Arial,sans-serif;margin:0 4px}
+.tippet .tippetArrow{position:absolute;border:10px solid transparent;height:20px;width:20px}
+.tippet.top{bottom:100%;left:70%;}
+.tippet.top .tippetArrow{bottom:-20px;left:5px;border-top-color:#58e}
+.tippet.right{left:100%;top:70%;}
+.tippet.right .tippetArrow{left:-20px;top:5px;border-right-color:#58e}
+.tippet.bottom{top:100%;left:70%;}
+.tippet.bottom .tippetArrow{top:-20px;left:5px;border-bottom-color:#58e}
+.tippet.left{right:100%;top:70%;}
+.tippet.left .tippetArrow{right:-20px;top:5px;border-left-color:#58e}
+.tippet.middle.right .tippetArrow,.tippet.middle.left .tippetArrow{margin:auto 0;top:1px;bottom:1px}
+.tippet.middle.top .tippetArrow,.tippet.middle.bottom .tippetArrow{margin:0 auto;left:1px;right:1px}
+.tippet.before.right .tippetArrow,.tippet.before.left .tippetArrow{bottom:5px;top:auto}
+.tippet.before.top .tippetArrow,.tippet.before.bottom .tippetArrow{right:5px;left:auto}

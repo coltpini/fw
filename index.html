@@ -6,6 +6,7 @@
 	<script src="fw.js"></script>
 	<script src="components/banner/banner.js"></script>
 	<script src="components/modal/modal.js"></script>
+	<script src="components/tippet/tippet.js"></script>
 	<script src="plugins/loading/fwLoading.js"></script>
 	<script src="codeHighlight/rainbow.js"></script>
 
@@ -14,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="rel/styles/loading.css" />
 	<link rel="stylesheet" type="text/css" href="rel/styles/banner.css" />
 	<link rel="stylesheet" type="text/css" href="rel/styles/modal.css" />
+	<link rel="stylesheet" type="text/css" href="rel/styles/tippet.css" />
     <link rel="stylesheet" type="text/css" href="codeHighlight/monokai.css" />
 
 </head>
@@ -195,13 +197,16 @@ var hoverHandler = function(e){
 //    wc.style.display = "none";
     var pp = fw.pointerPosition(e);
     var oe = document.elementFromPoint(pp.x, pp.y);
-    if(fw.button(e) !== 1){
-        fw('.square').forEach(function(elem){
-            elem.removeClass('hovered');
-        });
-    }
-    oe.addClass('hovered');
-//    wc.style.display = "block";
+    if(oe.containsClass('square')){
+	    if(fw.button(e) !== 1){
+	        fw('.square').forEach(function(elem){
+	            elem.removeClass('hovered');
+	        });
+	    }
+	    oe.addClass('hovered');
+
+		//  wc.style.display = "block";
+	}
 };
 
 fw('.square').forEach(function(elem){
@@ -511,13 +516,10 @@ l.find('input[type="button"]').addListener('click',function(e){
 			<h2>banner.confirm</h2>
 			<div class="bannerHolder"></div>
 
-			<select id="bannerType">
-				<option>Alert</option>
-				<option>Alert with timeout</option>
-				<option>confirm</option>
-				<option>prompt</option>
-			</select>
-			<input type="button" id="bannerButton" value="show banner" />
+			<button>alert</button>
+			<button>alert with timeout</button>
+			<button>confirm</button>
+			<button>prompt</button>			
 			<p class="feedback"></p>
 <script>
 var banner = new Banner(fw('.bannerHolder')),
@@ -528,29 +530,27 @@ var banner = new Banner(fw('.bannerHolder')),
 var bannerInputHandler = function(e){
     var title = "A banner Title",
         message = "A banner message, this is an awesome message, I hope you feel much happier for having it.",
-        type = "alert";
+        type = this.innerHTML;
     var callback = function(val){fw('#banner .feedback').innerHTML = type + " banner said: <em>'" + val + "'</em> how do you feel about that?";};
 
-    switch (bannerType.selectedIndex){
-        case 0:
-            type = "alert";
+    switch (type){
+        case "alert":
             banner.alert(title,message,false,callback);
             break;
-        case 1:
-            type = "alert";
+        case "alert with timeout":
             banner.alert(title,message,true,callback);
             break;
-        case 2:
-            type = "confirm";
+        case "confirm":
             banner.confirm("The Question","Is this an awesome message? Do you feel much happier?",callback);
             break;
         default:
-            type = "prompt";
             banner.prompt("Another Question","On a scale of one to 42, how happy are you?",42,callback);
             break;
     }
 }
-bannerButton.addListener('click',bannerInputHandler);
+fw('#banner button').forEach(function(elem){
+	elem.addListener('click',bannerInputHandler);
+});
 
 </script>
 		</div>
@@ -559,38 +559,90 @@ bannerButton.addListener('click',bannerInputHandler);
 			<h2>Alert</h2>
 			<h2>Confirm</h2>
 			<h2>Prompt</h2>
-			<select id="modalType">
-				<option>alert</option>
-				<option>confirm</option>
-				<option>prompt</option>
-			</select>
-			<input type="button" id="modalButton" value="show modal" />
+			<button>alert</button>
+			<button>confirm</button>
+			<button>prompt</button>			
 			<p class="feedback"></p>
 <script>
-    var modalType = fw('#modalType'),
-        modalButton = fw('#modalButton');
+var modalType = fw('#modalType'),
+    modalButton = fw('#modalButton');
 
 
-    var modalInputHandler = function(e){
-        var title = "A modal Title",
-            message = "A modal message, this is an awesome message, I hope you feel much happier for having it.",
-            type = "alert";
-        var callback = function(val){fw('#modalDemo .feedback').innerHTML = type + " modal said: <em>'" + val + "'</em> how do you feel about that?";};
+var modalInputHandler = function(e){
+    var title = "A modal Title",
+        message = "A modal message, this is an awesome message, I hope you feel much happier for having it.",
+        type = this.innerHTML;
+    var callback = function(val){fw('#modalDemo .feedback').innerHTML = type + " modal said: <em>'" + val + "'</em> how do you feel about that?";};
 
-        switch (modalType.selectedIndex){
-            case 0:
-                Alert(title,message,callback);
-                break;
-            case 1:
-                Confirm(title,message,"ok","cancel",callback);
-                break;
-            default:
-                Prompt(title,message,"is that your final answer?","cancel",42,callback);
-                break;
-        }
+    switch (type){
+        case "alert":
+            Alert(title,message,callback);
+            break;
+        case "confirm":
+            Confirm(title,message,"ok","cancel",callback);
+            break;
+        default:
+            Prompt(title,message,"is that your final answer?","cancel",42,callback);
+            break;
     }
-    modalButton.addListener('click',modalInputHandler);
+}
+fw('#modalDemo button').forEach(function(elem){
+	elem.addListener('click',modalInputHandler);
+});
+</script>
+		</div>
+		<div pid="tippetDemo">
+			<h1>Tippet</h1>
+			<h2>Tippet</h2>
+			<h2>Tippet.show</h2>
+			<p class="feedback"></p>
+			<button class="top">top</button>
+			<button class="right">right</button>
+			<button class="bottom">bottom</button>
+			<button class="left">left</button>
+			<button class="before">before</button>
+			<button class="middle">middle</button>
+			<button class="after">after</button>
+<script>
+function tippetDemoInit(){
+    var s = fw('.square:nth-child(25)');
+    s.style.background = "#0f0";
+    var tippet = new Tippet(s,	{
+                                  content: "Here is the tippet. This is awesome", 
+                                  title: "the tippet"
+                                });
+	
+	tippet.show();
 
+}
+function tippetDemoExit(){
+	fw('.square:nth-child(25)').style.background = "";
+	fw('.tippet').remove();
+}
+
+var tippetHandler = function(e){
+	var c = this.getAttribute('class'),
+		t = fw('.tippet')
+		cs = [];
+
+	if(c === "before" || c === "middle" || c === "after"){
+		cs = ['before','middle','after'];			
+	}
+	else{
+		cs = ['top','right','bottom','left'];		
+	}
+
+	var i = cs.length;
+	while(i--){
+		t.removeClass(cs[i])
+	}
+	t.addClass(c);
+
+};
+
+fw('#tippetDemo button').forEach(function(elem){
+	elem.addListener('click',tippetHandler);
+});
 </script>
 		</div>
 	</div>

@@ -137,8 +137,6 @@ fw.stopCancel = function(e){
 fw.key = function(e){
 	e = e || window.event;
 	var code = e.keyCode || e.which || undefined;
-	// this needs to work the same for keyup, keydown, and keypress.
-	//don't know if it can.
 	var character = String.fromCharCode(code);
 	return {code: code, char: character};
 };
