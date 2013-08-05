@@ -36,6 +36,7 @@
 		<div id="fw" class="active">
 			<h1>fw()</h1>
 			<h2>fw</h2>
+			<h2>fw.find</h2>
 			<p>information</p>
 			<select class="findSelector">
 				<option></option>
@@ -591,7 +592,7 @@ fw('#modalDemo button').forEach(function(elem){
 });
 </script>
 		</div>
-		<div pid="tippetDemo">
+		<div id="tippetDemo">
 			<h1>Tippet</h1>
 			<h2>Tippet</h2>
 			<h2>Tippet.show</h2>
@@ -606,7 +607,7 @@ fw('#modalDemo button').forEach(function(elem){
 <script>
 function tippetDemoInit(){
     var s = fw('.square:nth-child(25)');
-    s.style.background = "#0f0";
+    s.style.background = "#69f";
     var tippet = new Tippet(s,	{
                                   content: "Here is the tippet. This is awesome", 
                                   title: "the tippet"
@@ -671,17 +672,18 @@ fw('#tippetDemo button').forEach(function(elem){
 
 		dc.createChild('div').addClass('char');
 		dc.createChild('div').addClass('char').addClass('code');
-
+		var isScriptActive = true;
 		var togglerHandler = function(e){
-		    if(this.containsClass('active')){
-            this.parentElement.find('[.active]').forEach(function(elem){
-		        elem.removeClass('active');
-		    });
-            }
-            else {
-                this.addClass('active');
-                this.parentElement.find('.scriptExample').addClass('active');
-            }
+			fw('[.scriptToggler, .scriptExample]').forEach(function(elem){
+			    if(elem.containsClass('active')){
+			    	elem.removeClass('active');
+			    	isScriptActive = false;
+	            }
+	            else {
+	                elem.addClass('active');
+	                isScriptActive = true;
+	            }
+	        });
 		};
 
         var changeHandler = function(e){
@@ -713,8 +715,13 @@ fw('#tippetDemo button').forEach(function(elem){
 
 
             if(typeof(se) === 'undefined'){
-                tb.createChild('div').addClass('scriptToggler').addClass('active').addListener('click',togglerHandler).innerHTML = "Script";
-                se = tb.createChild('pre').addClass('scriptExample').addClass('active').createChild('code');
+                var st = tb.createChild('div').addClass('scriptToggler').addListener('click',togglerHandler);
+                st.innerHTML = "Script";
+                se = tb.createChild('pre').addClass('scriptExample').createChild('code');
+                if(isScriptActive){
+                	st.addClass('active');
+                	se.parentElement.addClass('active');
+                }
             }
 
             Rainbow.color(script,'javascript', function(code,err){

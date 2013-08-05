@@ -1,4 +1,4 @@
-function showModal(modalTitle, modalMessage) {
+function showModal(modalTitle, modalMessage, mClass) {
 	//since this is a modal, I can only show if no modal is there?
 	// or do I destroy this modal?
 	// should it wait in line?
@@ -6,6 +6,9 @@ function showModal(modalTitle, modalMessage) {
 		title = fw('<h3>'),
 		message = fw('<div>').addClass('message'),
 		blackout = fw('<div>').addClass('blackout');
+
+	if(typeof(mClass) !== "undefined")
+		modal.addClass(mClass);
 
 	title.innerHTML = modalTitle;
 	message.appendChild(modalMessage);
@@ -76,8 +79,6 @@ function Prompt(title, question, yes, no, initial, callback){
 	actions.appendChild(ok);
 	actions.appendChild(cancel);
 	message.appendChild(actions);
-
-
 
 	showModal(title, message);
 

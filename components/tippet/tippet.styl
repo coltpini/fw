@@ -44,12 +44,10 @@ border-top-radius(rad)
 	text-align left
 	position absolute
 	z-index 201
-	margin 12px
 	border 2px solid tippet-border
 	background-color tippet-background
 	font 12px/14px 'Helvetica Neue', helvetica, sans-serif
 	border-radius 4px
-
 
 	h3 
 		padding 5px
@@ -74,16 +72,30 @@ border-top-radius(rad)
 
 .tippet 
 	&.top 
-		bottom 100%		
-		left 70%
+		bottom 100%
+		left 100%
+		margin-bottom 12px
+		margin-left -23px
+		&.before
+			right 100%
+			left auto
+			margin-bottom 12px
+			margin-right -23px
 		.tippetArrow
 			bottom -20px
 			left 5px
 			border-top-color tippet-border		
 
 	&.right 
+		top 100%
 		left 100%
-		top 70%
+		margin-top -23px
+		margin-left 12px
+		&.before
+			margin-right 12px
+			margin-bottom -23px
+			bottom 100%
+			top auto
 		.tippetArrow
 			left -20px
 			top 5px
@@ -91,21 +103,33 @@ border-top-radius(rad)
 
 	&.bottom 
 		top 100%
-		left 70%
+		left 100%
+		margin-top 12px
+		margin-left -23px
+		&.before
+			right 100%
+			left auto
+			margin-top 12px
+			margin-right -23px
 		.tippetArrow
 			top -20px
 			left 5px
 			border-bottom-color tippet-border
 
 	&.left 	
+		top 100%
 		right 100%
-		top 70%
+		margin-top -23px
+		margin-right 12px
+		&.before
+			margin-left 12px
+			margin-bottom -23px
+			bottom 100%
+			top auto
 		.tippetArrow
 			right -20px
 			top 5px
 			border-left-color tippet-border
-
-	//&.front
 
 	&.middle
 		&.right, &.left
@@ -114,7 +138,6 @@ border-top-radius(rad)
 				top 1px
 				bottom 1px
 		&.top, &.bottom
-			
 			.tippetArrow
 				margin 0 auto
 				left 1px

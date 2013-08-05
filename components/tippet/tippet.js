@@ -32,7 +32,6 @@ Tippet.prototype.render = function(){
     t.close = t.head.createChild('<span>').addClass('close');
     t.container = t.createChild('<section>').addClass('tippetContent');
     t.arrow = t.createChild('<div>').addClass('tippetArrow');
-
     
     t.container.innerHTML = this.options.content;
 
@@ -40,7 +39,7 @@ Tippet.prototype.render = function(){
     if(fw.cssStyle(this.elem,'position' === 'static') || this.elem.style.position === 'static'){
         this.elem.style.position = 'relative';
     }
-
 };
+
 Tippet.prototype.collision = function(){};
 
