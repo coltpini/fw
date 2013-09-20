@@ -333,16 +333,16 @@ fw.qs = function(attr){
 	// var data = {};
 	// if(url.indexOf('?') > -1){
 	// var ds = url.substring(url.indexOf('?')),
-	// 	url = url.substring(0,url.indexOf('?')),
-	// 	da = ds.split('&');
-	// 	var i = da.length;
-	// 	while(i--){
-	// 		var ia = da[i].split('=');
-	// 		if(ia[0] || ia[1]){
-	// 			data[ia[0]] = ia[1]
-	// 		}
-	// 	}
-	// }
+	//	url = url.substring(0,url.indexOf('?')),
+	//	da = ds.split('&');
+	//	var i = da.length;
+	//	while(i--){
+	//		var ia = da[i].split('=');
+	//		if(ia[0] || ia[1]){
+	//			data[ia[0]] = ia[1]
+	//		}
+	//	}
+	//}
 };
 
 fw.proxy = function(func, obj, _this) {
@@ -412,6 +412,24 @@ fw.checkCssPropSupport = function(prop, browser){
 	return support;
 };
 
+fw.isEventSupported = function(eventName){
+	var TAGNAMES = {
+	'select':'input','change':'input',
+	'submit':'form','reset':'form',
+	'error':'img','load':'img','abort':'img'
+	};
+
+	var el = fw('<' + (TAGNAMES[eventName] || 'div') + '>');
+	eventName = 'on' + eventName.toLowerCase();
+	var isSupported = (eventName in window);
+	if (!isSupported) {
+		el.setAttribute(eventName, 'return;');
+		isSupported = typeof el[eventName] == 'function';
+	}
+	el = null;
+	return isSupported;
+};
+
 fw.cookie = {
 	set :   function(name, val, days){
 				var expires = "";
@@ -432,8 +450,7 @@ fw.cookie = {
 					if (c.indexOf(nameEQ) === 0) val = c.substring(nameEQ.length,c.length);
 				}
 			return encodeURIComponent(val);
-			},
-
+	},
 	remove : function(name){
 			this.set(name, "", -1);
 	}
@@ -594,6 +611,16 @@ var FW = function(fwObj){
 		else{this.removeEventListener(eventName,h,p);}
 
 		return this;
+	};
+
+	fwObj.simulateEvent = function(eventType){
+		if (this.fireEvent) {
+			this.fireEvent('on' + eventType);
+		} else {
+			var evObj = document.createEvent('Events');
+			evObj.initEvent(eventType, true, false);
+			this.dispatchEvent(evObj);
+		}
 	};
 
 	fwObj.opacity = function(num){

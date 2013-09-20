@@ -49,7 +49,6 @@ module.exports = function(grunt){
       }
     },
 
-    //regarde (instead of watch) watches for changes in file to fire tasks
     watch: {
       copy : {
         files: ['components/**/*.png','plugins/**/*.png','components/**/*.jpg','plugins/**/*.jpg','components/**/*.gif','plugins/**/*.gif'],

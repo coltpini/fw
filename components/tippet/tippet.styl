@@ -16,8 +16,8 @@ background-gradient(color1, color2)
 border-radius(rad)
 	-webkit-border-radius rad
 	border-radius rad
-	-moz-background-clip padding 
-	-webkit-background-clip padding-box 
+	-moz-background-clip padding
+	-webkit-background-clip padding-box
 	background-clip padding-box
 
 border-top-radius(rad)
@@ -25,17 +25,17 @@ border-top-radius(rad)
 	border-top-right-radius rad
 	-webkit-border-top-left-radius rad
 	border-top-left-radius rad
-	-moz-background-clip padding 
-	-webkit-background-clip padding-box 
+	-moz-background-clip padding
+	-webkit-background-clip padding-box
 	background-clip padding-box
 
-//.tippetElem 
+//.tippetElem
 
-.tippet 
+.tippet
 	max-width 400px
 	min-width 200px
 
-.tippet.wide 
+.tippet.wide
 	max-width 700px
 	min-width 500px
 
@@ -49,29 +49,40 @@ border-top-radius(rad)
 	font 12px/14px 'Helvetica Neue', helvetica, sans-serif
 	border-radius 4px
 
-	h3 
+	.close
+		position absolute
+		top 3px
+		right 4px
+		cursor pointer
+		font normal 10px/9px "Lucida Grande","Lucida Sans","Lucida Sans Regular","Lucida Sans Unicode",Verdana,Helvetica,Arial,sans-serif
+		color tippet-title-color
+		text-shadow 0px 1px 1px #fff - tippet-title-color
+
+	h3
 		padding 5px
 		margin 0 0 2px 0
 		font normal 10px/9px "Lucida Grande","Lucida Sans","Lucida Sans Regular","Lucida Sans Unicode",Verdana,Helvetica,Arial,sans-serif
 		color tippet-title-color
 		text-shadow 0px 1px 1px #fff - tippet-title-color
-		background-gradient tippet-light, tippet-border		
-		border-top-radius 2px	
+		background-gradient tippet-light, tippet-border
+		border-top-radius 2px
 
-	.tippetContent 
+	.tippetContent
 		padding 5px
 		color tippet-text
 		font 12px/16px "Lucida Grande", "Lucida Sans", "Lucida Sans Regular", "Trebuchet MS", Arial, sans-serif
 		margin 0 4px
+		max-height 400px
+		overflow auto
 
-	.tippetArrow 
+	.tippetArrow
 		position absolute
 		border 10px solid transparent
 		height 20px
 		width 20px
 
-.tippet 
-	&.top 
+.tippet
+	&.top
 		bottom 100%
 		left 100%
 		margin-bottom 12px
@@ -84,9 +95,9 @@ border-top-radius(rad)
 		.tippetArrow
 			bottom -20px
 			left 5px
-			border-top-color tippet-border		
+			border-top-color tippet-border
 
-	&.right 
+	&.right
 		top 100%
 		left 100%
 		margin-top -23px
@@ -101,7 +112,7 @@ border-top-radius(rad)
 			top 5px
 			border-right-color tippet-border
 
-	&.bottom 
+	&.bottom
 		top 100%
 		left 100%
 		margin-top 12px
@@ -116,7 +127,7 @@ border-top-radius(rad)
 			left 5px
 			border-bottom-color tippet-border
 
-	&.left 	
+	&.left
 		top 100%
 		right 100%
 		margin-top -23px
@@ -134,7 +145,7 @@ border-top-radius(rad)
 	&.middle
 		&.right, &.left
 			.tippetArrow
-				margin auto	0			
+				margin auto	0
 				top 1px
 				bottom 1px
 		&.top, &.bottom
