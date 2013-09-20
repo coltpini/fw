@@ -412,7 +412,7 @@ fw.checkCssPropSupport = function(prop, browser){
 	return support;
 };
 
-fw.isEventSupported = function(eventName){
+fw.checkEventSupport = function(eventName){
 	var TAGNAMES = {
 	'select':'input','change':'input',
 	'submit':'form','reset':'form',
@@ -424,11 +424,11 @@ fw.isEventSupported = function(eventName){
 	var isSupported = (eventName in window);
 	if (!isSupported) {
 		el.setAttribute(eventName, 'return;');
-		isSupported = typeof el[eventName] == 'function';
+		isSupported = typeof el[eventName] === 'function';
 	}
 	el = null;
-	//HACK: Don't know why this event isn't showing up in IE10, but I will figure it out soon.
-	if(eventName === "onmsanimationstart" && navigator.appVersion.indexOf('MSIE 10') > -1)
+	//better than a hack, this isn't bad.
+	if(!isSupported && eventName.indexOf('msanimation') > -1 && typeof(AnimationEvent) !== "undefined")
 		isSupported = true;
 
 	return isSupported;
