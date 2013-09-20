@@ -427,6 +427,10 @@ fw.isEventSupported = function(eventName){
 		isSupported = typeof el[eventName] == 'function';
 	}
 	el = null;
+	//HACK: Don't know why this event isn't showing up in IE10, but I will figure it out soon.
+	if(listener[i] === "MSAnimationStart" && navigator.appVersion.indexOf('MSIE 10') > -1)  
+		isSupported = true;
+	
 	return isSupported;
 };
 
