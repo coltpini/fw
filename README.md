@@ -9,7 +9,7 @@ Use Doc
 fw
 --
 
-###Accepts
+### Accepts
 a string or an object.
 
 If a string is passed it looks for two special chars the value is wrapped in:
@@ -20,14 +20,14 @@ If there are no special chars it will use the selector and return an array for m
 
 If an object is passed in it will attach all the functions to the object, this is only neccesary if you are working with an object that doesn't inherit from the Element object, such as XML or other elements.
 
-###Returns
+### Returns
 *	A single dom element
 *	An group of dom elements
 *	An object with new functions attached.
 
 fw.find
 -------
-###Accepts
+### Accepts
 object to search and a selector string
 
 This function is used by fw() and by Element.prototype.find(). Seperated for use on non Element objects, such as XML, and to reduce duplication of code.
@@ -36,24 +36,24 @@ This also normalizes a return from querySelectorAll into a real array, instead o
 
 This will use the querySelectorAll function on the _this object, so the fw() function uses it against document, whereas Element.prototype.find uses it agains the instance of the Element.
 
-###Returns
+### Returns
 *	A single dom element
 *	An group of dom elements
 *	An object with new functions attached.
 
 fw.loadScript
 -------------
-###Accepts
+### Accepts
 a url to a script file.
 
 This loads a script into the page without a reload
 
-###Returns
+### Returns
 Nothing
 
 fw.extend
 ---------
-###Accepts
+### Accepts
 two objects
 
 This preforms a shallow merge of two objects.
@@ -88,73 +88,73 @@ would return this:
 		}
 	}
 
-###Returns
+### Returns
 the combined object.
 
 Publish Subscribe
 -----------------
 
-###fw.publish
+### fw.publish
 ####accepts
 a name and arguments
 
 this publishes a custom event to be consumed by the subscribers, The arguments object is passed along to the subscribers.
 
-####returns
+#### returns
 true or false based on success.
 
-###fw.subscribe
-####accepts
+### fw.subscribe
+#### accepts
 a name and a function
 
 this would accept a push from the "name" publish and pass the arguments to the function.
 
-####returns
+#### returns
 A token that is used to unsubscribe
 
-###fw.unsubscribe
-####accepts
+### fw.unsubscribe
+#### accepts
 a token (this comes from the subscribe function)
 
 This will unsubscribe a function that has been subscribed to a publish
 
-####returns
+#### returns
 a true or false on successful unsubscribe.
 
 Event things
 ------------
 
-###fw.stop
-####accepts
+### fw.stop
+#### accepts
 event
 
 preforms a stopPropogation (cross browser)
 
-###fw.cancel
-####accepts
+### fw.cancel
+#### accepts
 event
 
 preforms a preventDefault (cross browser)
 
-###fw.stop
-####accepts
+### fw.stop
+#### accepts
 event
 
 preforms a stopPropogation and preventDefault (cross browser)
 
-###fw.key
-####accepts
+### fw.key
+#### accepts
 event
 
 This finds a key code
 *note: currently the keypress is correct for every key and keyup and keydown are a little odd*
 
-####returns
+#### returns
 an object {code: keyCode, char: character}
 
 fw.ajax
 -------
-###Accepts
+### Accepts
 options object:
 	{
 		type: "GET or POST",
@@ -167,7 +167,7 @@ options object:
 
 This will preform a basic ajax call, will return a string of the file content.
 
-###Returns
+### Returns
 an object:
 	{
 		val: string trimed to the inside of the body tag,
@@ -178,7 +178,7 @@ an object:
 
 fw.jsonp
 --------
-###Accepts
+### Accepts
 options object:
 	{
 		url: jsonp url,
@@ -195,12 +195,12 @@ this does this:
 
 fw.stringToXml
 --------------
-###Accepts
+### Accepts
 xml string
 
 converts the xml string to an XML document object.
 
-###Returns
+### Returns
 xml document object
 
 fw.xmlToJson
@@ -209,16 +209,16 @@ xml document object, or xml string
 
 Converts a xml string object (using fw.stringToXml) to json or takes an xml document object and converts to json
 
-###Returns
+### Returns
 JS Object
 
 fw.randomString
 ---------------
-###Accepts
+### Accepts
 length and AlphaNumeric flag
 
 Produces a string, alpha or alphanumeric, of the specified length
 
-###Returns
+### Returns
 string
 
